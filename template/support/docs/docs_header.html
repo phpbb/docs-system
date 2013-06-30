@@ -1,0 +1,126 @@
+		<!-- IF not S_AJAX_REQUEST -->
+		<!-- INCLUDE overall_header.html -->
+		<!-- ENDIF -->
+		
+		<!-- IF S_IN_DOCS_UG -->
+		<!-- IF not S_AJAX_REQUEST -->
+		<script type="text/javascript">
+		// <![CDATA[
+			//
+			// AJAXed Tabs/Sections
+			//
+			//if (window.history && window.history.pushState)
+			//@TODO Add a supported browser notice
+			if ($.support.pjax)
+			{
+				//$(document).pjax('#wide a', '#ajax');
+				$(document).pjax('a', '#ajax');
+
+				$.pjax.defaults.scrollTo = false;
+			}
+			
+			$(function()
+			{
+				// @TODO Why is this here?
+				$('#qr_showeditor_div').toggle();
+			});
+			/*$(function()
+			{
+				function update_content(anchor)
+				{
+					// Prevent the SID from being treated as the tab
+					if (anchor[1] == '?')
+					{
+						anchor = '/';
+					}
+
+					anchor = anchor.split('/');
+
+					var tab = anchor[1] ? anchor[1] : '';
+					var section = anchor[2] ? anchor[2] : '';
+
+					// @TODO Add SID
+					$.get('{S_ABS_PATH_TO_DOCS_UG}index.php?selected_tab=' + tab + '&selected_sec=' + section, function(data)
+					{
+						$('#ajax').replaceWith(data);
+					});
+
+					// @TODO Why is this here?
+					$('#qr_showeditor_div').toggle();
+				}
+
+				update_content(location.hash ? location.hash : '/' + window.location.toString().split('{S_ABS_PATH_TO_DOCS_UG}')[1]);
+
+				$('#tabs a, .guide-menu a').live('click', function()
+				{
+					update_content(this.href.split('#')[1]);
+				});
+			});*/
+		// ]]>
+		</script>
+		<!-- ENDIF -->
+
+		<div id="ajax">
+		<!-- ENDIF -->
+			<ul class="linklist right-box">
+				<li>
+					<a href="{U_DOCS_LOGIN_LOGOUT}" <!-- IF S_USER_LOGGED_IN -->title="Logout [ {VIEWER_USERNAME} ]" accesskey="l">Logout [ {VIEWER_USERNAME} ]<!-- ELSE -->title="Login">Login<!-- ENDIF --></a>
+				</li>
+			</ul>
+
+			<ul class="linklist navlinks">
+				<li>
+					<a href="{S_ROOT_PATH}" accesskey="h">Home</a>
+					<strong>&#8249;</strong> <a href="{U_SUPPORT}">Support</a>
+					<strong>&#8249;</strong> <a href="{U_SUPPORT_DOCS}">Documentation</a>
+					<!-- IF S_IN_KB -->
+					<strong>&#8249;</strong> <a href="{U_SUPPORT_DOCS_KB}">Knowledge Base</a>
+					<!-- ELSEIF S_IN_DOCS_UG -->
+					<strong>&#8249;</strong> <a href="{U_SUPPORT_DOCS_UG}">User Guide</a>
+					<!-- ENDIF -->
+				</li>
+			</ul>
+
+			<ul id="docs_nav">
+				<li class="user_guide"><a href="{U_SUPPORT_DOCS_UG}"><span></span></a></li>
+				<li class="knowledge_base"><a href="{U_SUPPORT_DOCS_KB}"><span></span></a></li>
+				<li class="flash_tutorials"><a href="{U_SUPPORT_DOCS_FLASH}"><span></span></a></li>
+			</ul>
+
+			<br />
+
+			<div id="extras">
+				<div class="mini-panel">
+					<div class="inner"><span class="corners-top"><span></span></span>
+						<h3>need assistance?</h3>
+						<ul class="menu">
+							<li><!-- IF S_IN_KB --><a href="">Read the Knowledge Base FAQ</a><!-- ELSEIF S_IN_DOCS_UG --><a href="">Read the Userguide FAQ</a><!-- ENDIF --> (coming soon!)</li>
+							<li class="last"><a href="{U_BUGS_WEBSITE}">Report a bug in the User Guide</a></li>
+						</ul>
+					<span class="corners-bottom"><span></span></span></div>
+				</div>
+			</div>
+
+			<div id="main">
+				<p>
+				<!-- IF S_IN_KB -->
+				This section contains detailed articles elaborating on some of the common issues phpBB users encounter while using the product. Articles submitted by members of the community are checked for accuracy by the relevant phpBB Team. If you do not find the answer to your question here, we recommend looking through the <a href="{U_SUPPORT}">Support Section</a> as well as using the <a href="{U_GOOGLECSE}">Site Wide Search</a>.
+				<!-- ELSEIF S_IN_DOCS_UG -->
+				This section contains detailed articles elaborating on some of the common issues phpBB users encounter while using the product. Articles submitted by members of the community are checked for accuracy by the relevant phpBB Team. If you do not find the answer to your question here, we recommend looking through the <a href="{U_SUPPORT}">Support Section</a> as well as using the <a href="{U_GOOGLECSE}">Site Wide Search</a>.
+				<!-- ENDIF -->
+				</p>
+			</div>
+
+			<div class="wide">
+				<div id="tabs">
+					<ul>
+						<!-- BEGIN tabs -->
+						<li<!-- IF tabs.S_TAB_ACTIVE --> class="activetab"<!-- ENDIF -->><a href="{tabs.U_TAB}" rel="address:{tabs.U_TAB}"><span>{tabs.TAB}</span></a></li>
+						<!-- END tabs -->
+					</ul>
+				</div>
+				<div class="forumbg">
+					<div class="inner"><span class="corners-top"><span></span></span>
+						<div class="main-content">
+							<div class="inner">
+								<span class="corners-top grey"><span></span></span>

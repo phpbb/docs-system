@@ -1,0 +1,19 @@
+<!-- INCLUDE overall_header.html -->
+<ul class="linklist navlinks">
+	<li><a href="{U_HOME}">Home</a> 
+		<strong>&#8249;</strong> <a href="{U_SUPPORT}">Support</a>
+		<strong>&#8249;</strong> <a href="{U_SUPPORT_TUTORIALS}">Flash Tutorials</a>
+		<strong>&#8249;</strong> <!-- IF V_VERSION == '2.0' --><a href="{U_SUPPORT_TUTORIALS_2_0}">phpBB 2.0.x</a><!-- ELSE --><a href="{U_SUPPORT_TUTORIALS_3_0}">phpBB 3.0.x</a><!-- ENDIF -->
+	</li>
+</ul>
+<div id="main" class="wide">
+	<h2 class="imgrep tutorials">Flash tutorials</h2>
+	<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="780" height="466" codebase="http://active.macromedia.com/flash5/cabs/swflash.cab#version=5,0,0,0">
+		<param name="movie" value="{S_ROOT_PATH}support/tutorials/swf/{V_NAME}.swf">
+		<param name="play" value="true">
+		<param name="loop" value="false">
+		<param name="quality" value="high">
+		<embed src="{S_ROOT_PATH}support/tutorials/swf/{V_NAME}.swf" width="780" height="466" quality="high" loop="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?p1_prod_version=shockwaveflash"></embed>
+	</object>
+</div>
+<!-- INCLUDE overall_footer.html -->

@@ -1,0 +1,58 @@
+<!-- INCLUDE support/docs/docs_header.html -->
+								<p id="explain">Narrow down your search by selecting a category and/or version:</p>
+								<form method="get" id="narrow" action="">
+									<fieldset>
+										<select name="version" id="version" onchange="if(this.options[this.selectedIndex].value != 'blank'){ document.forms['narrow'].submit();}">
+											<option value="all">&nbsp; &nbsp;View articles for All Versions</option>
+											<option value="blank">&nbsp; &nbsp;---------------------------</option>
+											<option <!-- IF SELECTED_VERSION eq '3.0' -->selected="selected" <!-- ENDIF -->value="3.0">&nbsp; &nbsp;View articles for phpBB 3.0</option>
+											<option <!-- IF SELECTED_VERSION eq '3.1' -->selected="selected" <!-- ENDIF -->value="3.1">&nbsp; &nbsp;View articles for phpBB 3.1</option>
+										</select>
+										<select name="cat" id="cat" onchange="if(this.options[this.selectedIndex].value != 'blank'){ document.forms['narrow'].submit() }">
+											<option value="all">&nbsp; &nbsp;View articles in All Categories</option>
+											<option value="blank">&nbsp; &nbsp;---------------------------------------------</option>
+											<!-- BEGIN category -->
+											<option <!-- IF category.ACTIVE -->selected="selected" <!-- ENDIF -->value="{category.KEY}">&nbsp; &nbsp;View articles in {category.CATEGORY}</option>
+											<!-- END category -->
+										</select>
+										<input type="submit" value="{L_GO}" class="button2" /><br />
+									</fieldset>
+								</form>
+							</div>
+							<span class="corners-bottom grey"><span></span></span></div>
+						</div>
+					</div>
+
+					<div class="forumbg">
+						<div class="inner">
+							<ul class="topiclist kb-index">
+								<li class="header">
+									<dl>
+										<dt class="article-column" style="font-size: 10px; text-align: center;">Article</dt>
+										<dd class="views-column" style="font-size: 10px;">Views</dd>
+										<dd class="author-column" style="text-align: center;">Author / Date Submitted</dd>
+									</dl>
+								</li>
+							</ul>
+							<ul class="topiclist kb-index">
+							<!-- BEGIN article_row -->
+								<li class="row bg1">
+									<!-- IF article_row.S_FIRST_ROW --><span class="corners-top grey"><span></span></span><!-- ENDIF -->
+									<dl>
+										<dt class="article-column"><a href="{article_row.U_ARTICLE}" >{article_row.ARTICLE_TITLE}</a><!-- IF article_row.S_IS_REDIRECT --> <span class="error">(Outside Link)</span><!-- ENDIF --><br />
+											<span class="article-description">{article_row.DESCRIPTION}</span><br />
+										</dt>
+										<dd class="views-column"><!-- IF article_row.S_IS_REDIRECT --> N/A <!-- ELSE -->{article_row.VIEWS}<!-- ENDIF --></dd>
+										<dd class="author-column"><div><!-- IF article_row.S_LINK --><a href="{U_KB_PHPBB_TEAM}" style="color: #AA0000;" class="username-coloured">phpBB Team</a><!-- ELSE -->{article_row.AUTHOR}<!-- ENDIF --><hr />{article_row.DATE_SUBMITTED}</div></dd>
+									</dl>
+									<!-- IF article_row.S_LAST_ROW --><span class="corners-bottom grey"><span></span></span><!-- ENDIF -->
+								</li>
+							<!-- BEGINELSE -->
+								<li class="row bg1 rowkb">
+									<span class="corners-top grey"><span></span></span>
+										<h3 class="notice_kb margin-center">No articles matching your search criteria were found</h3>
+									<span class="corners-bottom grey"><span></span></span>
+								</li>	
+							<!-- END article_row -->
+							</ul>
+<!-- INCLUDE support/docs/docs_footer.html -->

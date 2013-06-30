@@ -1,0 +1,94 @@
+<!-- INCLUDE support/docs/docs_header.html -->
+<form method="get" id="narrow" action="">
+	<fieldset style="padding : .5em .5em;">
+		<input type="hidden" name="version" value="adm" />
+		<label for="cat"><span style="font-size:1.2em; font-weight: bold;">Display Options:</span></label>
+		<select name="cat" id="cat" onchange="if(this.options[this.selectedIndex].value != 'blank'){ document.forms['narrow'].submit() }">
+			<option value="all">&nbsp; &nbsp;View new and revisions [Default]</option>
+			<option <!-- IF ADM_OPTION eq 'viewall' -->selected="selected" <!-- ENDIF -->value="viewall">&nbsp; &nbsp;View all articles &amp; redirects</option>
+			<option value="blank">&nbsp; &nbsp;---------------------------</option>
+			<option <!-- IF ADM_OPTION eq 'redirects' -->selected="selected" <!-- ENDIF -->value="redirects">&nbsp; &nbsp;View redirects</option>
+			<option <!-- IF ADM_OPTION eq 'inactive' -->selected="selected" <!-- ENDIF -->value="inactive">&nbsp; &nbsp;View inactive articles</option>
+			<option value="blank">&nbsp; &nbsp;---------------------------</option>
+			<option <!-- IF ADM_OPTION eq 'support' -->selected="selected" <!-- ENDIF -->value="support">&nbsp; &nbsp;[Support] View assigned to Support Team</option>
+			<option <!-- IF ADM_OPTION eq 'support-active' -->selected="selected" <!-- ENDIF -->value="support-active">&nbsp; &nbsp; └ [Support] Including active and links</option>
+			<option <!-- IF ADM_OPTION eq 'styles' -->selected="selected" <!-- ENDIF -->value="styles">&nbsp; &nbsp;[Styles] View assigned to Styles Team</option>
+			<option <!-- IF ADM_OPTION eq 'styles-active' -->selected="selected" <!-- ENDIF -->value="styles-active">&nbsp; &nbsp; └ [Styles] Including active and links</option>
+			<option <!-- IF ADM_OPTION eq 'mod' -->selected="selected" <!-- ENDIF -->value="mod">&nbsp; &nbsp;[MOD] View assigned to MOD Team</option>
+			<option <!-- IF ADM_OPTION eq 'mod-active' -->selected="selected" <!-- ENDIF -->value="mod-active">&nbsp; &nbsp; └ [MOD] Including active and links</option>
+		</select>
+		<input type="submit" value="{L_GO}" class="button2" /><br />
+	</fieldset>
+</form>
+</div>
+<span class="corners-bottom grey"><span></span></span></div>
+</div>
+</div>
+
+<div class="forumbg">
+	<div class="inner">
+		<ul class="topiclist adm-page">
+			<li class="header">
+				<dl>
+					<dt class="article-column" style="text-align: center; font-size: 10px;">Article</dt>
+					<dd class="author-column">Author</dd>
+					<dd class="modified-column">Date Last Modified</dd>
+					<dd class="status-column" style="width: 8%;">Status</dd>
+				</dl>
+			</li>
+		</ul>
+		<ul class="topiclist adm-page">
+			<!-- BEGIN article_row -->
+			<li class="row bg1">
+				<!-- IF article_row.S_FIRST_ROW --><span class="corners-top grey"><span></span></span><!-- ENDIF -->
+				<dl>
+					<dt class="article-column"><a href="{article_row.U_ARTICLE}" >{article_row.ARTICLE_TITLE}</a><!-- IF article_row.S_IS_REDIRECT --> <span class="error">(Outside Link)</span><!-- ENDIF --><br />
+						<span class="article-description">{article_row.DESCRIPTION}</span><br />
+					</dt>
+					<dd style="width: 38%; text-align: center; padding : 0em 0em;">
+						<dl>
+							<dt style="width: 50%; text-align: center; font-size:1.3em; padding : 0em 0em;"><!-- IF article_row.S_LINK --><a href="../../community/memberlist.php?mode=leaders" style="color: #AA0000;" class="username-coloured">phpBB Team</a><!-- ELSE -->{article_row.AUTHOR}<!-- ENDIF --></dt>
+							<dd style="width: 49%; text-align: center; padding: 0em 0em;">{article_row.DATE_LAST_MODIFIED}</dd>
+						</dl>
+						<hr />
+						<form method="post" id="mcp{article_row.ID}" action="<!-- IF ADM_OPTION -->../<!-- ENDIF -->">
+							<fieldset>
+								<select name="mode" id="mode{article_row.ID}" onchange="if(this.options[this.selectedIndex].value != 'blank'){ document.forms['mcp{article_row.ID}'].submit() }">
+									<option value="blank">&nbsp; &nbsp;Assign To:</option>
+									{article_row.ASSIGNED_TO}
+									<option value="blank">&nbsp; &nbsp;-----------------------</option>
+									<!-- IF article_row.S_IS_REDIRECT -->
+										<option value="edit--ing{article_row.SLUG}">&nbsp; &nbsp;Edit Redirect</option>
+										<option value="nuke">&nbsp; &nbsp;Permanently Delete Redirect()</option>
+									<!-- ELSE -->
+										<option value="topic">&nbsp; &nbsp;View article's topic</option>
+										<option value="edit">&nbsp; &nbsp;Edit article / Submit revision</option>
+									<!-- IF article_row.S_IS_ACTIVE -->
+										<option value="deactivate">&nbsp; &nbsp;Deactivate/Deny Article()</option>
+									<!-- ELSE -->
+										<option value="activate">&nbsp; &nbsp;Activate Article()</option>
+									<!-- ENDIF -->
+									<!-- IF article_row.REVISION_DATE -->
+										<option value="approve_revision">&nbsp; &nbsp;Approve Revision()</option>
+									<!-- ENDIF -->
+									<!-- ENDIF -->
+								</select>
+								<input type="hidden" name="id" value="{article_row.ID}" />
+								<input type="hidden" name="request_uri" value="{REQUEST_URI}" />
+								<input type="submit" value="{L_GO}" class="button2" />
+							</fieldset>
+						</form>
+					</dd>
+					<dd class="status-column"><a href="{article_row.U_ARTICLE}<!-- IF article_row.STATUS_IMAGE == 'revision' -->rev/<!-- ENDIF -->"><img src="{S_THEME_PATH}/images/support/docs/kb_{article_row.STATUS_IMAGE}.gif" alt="{article_row.STATUS_IMAGE}" /></a><!-- IF article_row.TYPE_IMAGE --><br /><img src="{S_THEME_PATH}/images/support/docs/kb_{article_row.TYPE_IMAGE}.gif" /><!-- ENDIF --></dd>
+				</dl>
+				<!-- IF article_row.S_LAST_ROW --><span class="corners-bottom grey"><span></span></span><!-- ENDIF -->
+			</li>
+			<!-- BEGINELSE -->
+			<li class="row bg1 rowkb">
+				<span class="corners-top grey"><span></span></span>
+					<h3 class="notice_kb margin-center">No articles matching the search parameters were found. Sound the alarms!</h3>
+				<span class="corners-bottom grey"><span></span></span>
+			</li>
+			<!-- END article_row -->
+		</ul>
+<!-- INCLUDE support/docs/docs_footer.html -->

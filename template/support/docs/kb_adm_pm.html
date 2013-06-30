@@ -1,0 +1,37 @@
+<!-- INCLUDE support/docs/docs_header.html -->
+<form method="post" action="">
+	<!-- IF ERRORS --><p class="error">&#8250; {ERRORS}</p><!-- ENDIF -->
+	<fieldset class="fields2">
+		<div class="information-yellow"><p style="margin-bottom: 0;"><strong>{WARNING}</strong></p></div>
+		<div class="information-blue"><p style="margin-bottom: 0;"><strong>If you would like to send a private message to the author regarding this action, fill in the form below.<br />Otherwise, you can skip this step.</strong></p></div>
+		<fieldset class="submit-buttons">
+			<input type="submit" tabindex="1" accesskey="x" name="skip" value="Don't send PM" class="kb_dont_send_pm" />
+		</fieldset>
+		<hr />
+		<br />
+		<dl>
+			<dt><label for="title">To:</label></dt>
+			<dd id="title">{AUTHOR}</dd>
+		</dl>
+		<dl>
+			<dt><label for="bot_title">From:</label></dt>
+			<dd id="bot_title">{KB_BOT}</dd>
+		</dl>
+		<dl>
+			<dt><label for="pm_subject">Subject:</label></dt>
+			<dd><input name="pm_subject" id="pm_subject" tabindex="2" maxlength="150" value="{SUBJECT}" class="inputbox" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="pm_text">Private Message text:<br /></label></dt>
+			<dd><textarea name="pm_text" id="pm_text" tabindex="3" rows="15" class="inputbox" cols="76">{TEXT}</textarea></dd>
+		</dl>
+		<input type="hidden" name="username_list" value="Marshalrusty" />
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<input type="hidden" name="mode" value="{S_MODE}" />
+		<input type="hidden" name="id" value="{ARTICLE_ID}" />
+		<input type="hidden" name="pm_warning" value="{WARNING}" />
+		<input type="submit" accesskey="s" tabindex="4" name="send_pm" value="Send PM;" class="kb_send_pm" />
+	</fieldset>
+</form>
+<!-- INCLUDE support/docs/docs_footer.html -->

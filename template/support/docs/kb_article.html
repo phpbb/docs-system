@@ -1,0 +1,94 @@
+<!-- INCLUDE support/docs/docs_header.html -->
+<div class="article-body">
+<!-- IF STATUS_IMG -->
+	<div class="article-img">
+		<!-- IF KB_ADMIN -->
+			<form method="post" id="mcp" action="<!-- IF S_HAS_REVISION -->../<!-- ENDIF -->../../adm/">
+				<fieldset>
+					<select name="mode" id="mode" onchange="if(this.options[this.selectedIndex].value != 'blank'){ document.forms['mcp'].submit() }">
+						<option value="blank">&nbsp; &nbsp;Assign To:</option>
+						{ASSIGNED_TO}
+						<option value="blank">&nbsp; &nbsp;-----------------------</option>
+						<option value="topic">&nbsp; &nbsp;View article's topic</option>
+						<option value="edit">&nbsp; &nbsp;Edit article / Submit revision</option>
+						<!-- IF S_IS_ACTIVE -->
+							<option value="deactivate">&nbsp; &nbsp;Deactivate/Deny Article()</option>
+						<!-- ELSE -->
+							<option value="activate">&nbsp; &nbsp;Activate Article()</option>
+						<!-- ENDIF -->
+						<!-- IF REVISION_SUBMITTED -->
+							<option value="approve_revision">&nbsp; &nbsp;Approve Revision()</option>
+						<!-- ENDIF -->
+					</select>
+					<input type="hidden" name="id" value="{ID}" />
+					<input type="hidden" name="request_uri" value="{REQUEST_URI}" />
+					<input type="submit" value="{L_GO}" class="button2" />
+				</fieldset>
+			</form>
+		<!-- ENDIF -->
+		<img src="{S_THEME_PATH}/images/support/docs/kb_status_{STATUS_IMG}.gif" alt="{STATUS_IMG}" />
+		<!-- IF REVISION_SUBMITTED --><img src="{S_THEME_PATH}/images/support/docs/kb_status_revision_submitted.gif" alt="" /><!-- ENDIF -->
+	</div>
+<!-- ENDIF -->
+
+<!-- IF S_PREVIEW -->
+	<p class="error" style="font-size:1.3em;">&#8250; WARNING: You are currently in preview mode. No data has been saved.<!-- IF ERRORS --><br />&#8250; {ERRORS}<!-- ENDIF --></p>
+	<hr />
+	<form action="{U_ACTION}" method="post">
+		<input type="hidden" name="id" value="{ID}" />
+		<input type="hidden" name="title" value="{TITLE}" />
+		<input type="hidden" name="author_username" value="{AUTHOR_USERNAME}" />
+		<input type="hidden" name="as_moderator" value="{AS_MODERATOR}" />
+		<input type="hidden" name="description" value="{DESCRIPTION}" />
+		<input type="hidden" name="author_id" value="{AUTHOR_ID}" />
+		<input type="hidden" name="for_phpbb2" value="{FOR_PHPBB2}" />
+		<input type="hidden" name="for_3_0" value="{FOR_3_0}" />
+		<input type="hidden" name="for_3_1" value="{FOR_3_1}" />
+		<input type="hidden" name="text" value="{UNEDITED_TEXT}" />
+
+		<!-- BEGIN category -->
+		<input type="hidden" name="in_{category.KEY}" value="1" />
+		<!-- END category -->
+
+		<!-- BEGIN attachments -->
+		<input type="hidden" name="{attachments.FIELD}" value="{attachments.ID}" />
+		<!-- END attachments -->
+
+		<fieldset class="submit-buttons">
+			<input type="submit" tabindex="5" name="edit_preview" value="Edit" class="button1" />&nbsp; 
+			<!-- IF not ERRORS --><input type="submit" tabindex="6" name="submit" value="Submit" class="button1" /><!-- ENDIF -->
+		</fieldset>	
+	</form>
+<!-- ENDIF -->
+
+<div class="postbody" style="width: 100%;">
+	<!-- IF S_IS_REVISION -->
+	<div class="rules" style="width: 60%; margin: 0 0 10px;">
+		<span class="corners-top"><span></span></span>
+			<strong>WARNING<br />You are viewing a pending revision. The public cannot yet view this content.</strong>		
+		<span class="corners-bottom"><span></span></span>
+	</div>
+	<!-- ENDIF -->
+
+	<h3 class="error">{TITLE}</h3>
+	<p><strong>Written By:</strong> {AUTHOR_USERNAME}<br />
+	<strong>Written On:</strong> {DATE_SUBMITTED}<br />
+	<strong>Last Modified:</strong> {DATE_LAST_MODIFIED}<br />
+	<strong>In Categories:</strong> <select><!-- BEGIN category --><option value="">{category.CATEGORY}</option><!-- BEGINELSE --><option value="">- None selected -</option><!-- END category --></select><br />
+	<strong>Description:</strong> {DESCRIPTION}</p>
+	<dl class="codebox">
+		<dt>Link to this article: <a href="#" onclick="selectCode(this); return false;">Select All</a></dt>
+		<dd><code>{LINK_TO_ARTICLE}</code></dd>
+	</dl>
+	<hr />
+	<div class="content">
+		{TEXT}
+	</div>
+
+	<br /><b>Attachments:</b>
+	<!-- BEGIN attachments -->
+	<br />{attachments.ATTACH_ID} - {attachments.REAL_FILENAME}
+	<!-- END attachments -->
+</div>
+</div>
+<!-- INCLUDE support/docs/docs_footer.html -->

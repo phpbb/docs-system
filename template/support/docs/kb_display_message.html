@@ -1,0 +1,40 @@
+<!-- INCLUDE support/docs/docs_header.html -->
+<!-- IF MESSAGE -->
+<h3 class="notice_kb"><span class="corners-top"><span></span></span>Notice:</h3>
+<div>
+	<h3 class="info">{MESSAGE}</h3>
+	<span class="corners-bottom"><span></span></span>
+</div>
+<!-- ELSE -->
+<h3>Please login so that your credentials can be verified.</h3>
+<br />
+<form action="{S_ROOT_PATH}community/ucp.php?mode=login" method="post">
+	<fieldset class="fields1">
+		<dl>
+			<dt><label for="username">Username:</label></dt>
+			<dd><input type="text" id="username" name="username" size="25" maxlength="40" value="" tabindex="1" class="inputbox medium" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="password">Password:</label></dt>
+			<dd><input type="password" id="password" name="password" size="25" maxlength="100" tabindex="2" class="inputbox medium" /></dd>
+		</dl>
+		<dl>
+			<dt></dt>
+			<dd><input type="checkbox" class="radio" name="autologin" tabindex="3" /> Log me on automatically each visit</dd>
+		</dl>
+		<dl>
+			<dt></dt>
+			<dd><input type="checkbox" class="radio" name="viewonline" tabindex="4" /> Hide my online status this session</dd>
+		</dl>
+		<dl>
+			<dt></dt>
+			<dd>
+				<input type="hidden" name="redirect" value="{U_KB_LOGIN_LOGOUT}" />
+				<input type="hidden" name="sid" value="57b81f56c5bfc7e1b91852896119c2f0" />
+				<input type="submit" name="login" value="Login" tabindex="5" class="button1" />
+			</dd>
+		</dl>
+	</fieldset>
+</form>
+<!-- ENDIF -->
+<!-- INCLUDE support/docs/docs_footer.html -->

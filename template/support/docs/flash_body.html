@@ -1,0 +1,50 @@
+<!-- INCLUDE overall_header.html -->
+
+<ul class="linklist right-box">
+	<li>
+		<a href="{U_KB_LOGIN_LOGOUT}" <!-- IF S_USER_LOGGED_IN -->title="Logout [ {VIEWER_USERNAME} ]" accesskey="l">Logout [ {VIEWER_USERNAME} ]<!-- ELSE -->title="Login">Login<!-- ENDIF --></a>
+	</li>
+</ul>
+
+<ul class="linklist navlinks">
+	<li>
+		<a href="{S_ROOT_PATH}" accesskey="h">Home</a>
+		<strong>&#8249;</strong> <a href="{U_SUPPORT}">Support</a>
+		<strong>&#8249;</strong> <a href="{U_SUPPORT_DOCS}">Documentation</a>
+		<strong>&#8249;</strong> <a href="{U_SUPPORT_DOCS_FLASH}">Flash Tutorials</a>
+	</li>
+</ul>
+
+<ul id="docs_nav">
+	<li class="user_guide"><a href="{U_SUPPORT_DOCS_UG}"><span></span></a></li>
+	<li class="knowledge_base"><a href="{U_SUPPORT_DOCS_KB}"><span></span></a></li>
+	<li class="flash_tutorials"><a href="{U_SUPPORT_DOCS_FLASH}"><span></span></a></li>
+</ul>
+
+<br /><br />
+
+<div id="main">
+	<p>You can find the flash tutorials for phpBB {V_VERSION} below. To open a flash tutorial, simply click the thumbnail and you will be taken to the tutorial. Please note that these tutorials require the Adobe Flash Player to be installed on your system.<br /><br />If you have any further questions after having watched these tutorials and consulting the online documentation, please feel free to post in our <a href="{U_COMMUNITY}">support forum</a> to get help from other users.</p>
+</div>
+
+<div id="extras">
+	<div class="mini-panel">
+		<div class="inner"><span class="corners-top"><span></span></span>
+			<h3>found a bug?</h3>
+			<ul class="menu">
+				<li><a href="{U_BUGS}">Bug Tracker</a></li>
+				<li class="last"><a href="{U_BUGS_WEBSITE}">Report a bug in the Flash Tutorials</a></li>
+			</ul>
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+</div>
+
+<div class="wide">
+	<ul id="tutorials">
+		<!-- BEGIN tutorials -->
+		<li><a href="{tutorials.U_TUTORIAL}"><img src="{S_ROOT_PATH}support/tutorials/thumbs/{tutorials.V_NAME}.gif" alt="{tutorials.V_TITLE}" /></a><br /><strong>{tutorials.V_TITLE}</strong></li>
+		<!-- END tutorials -->
+	</ul>
+</div>
+
+<!-- INCLUDE overall_footer.html -->

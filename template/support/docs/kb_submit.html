@@ -1,0 +1,137 @@
+<!-- INCLUDE support/docs/docs_header.html -->
+<!-- IF S_PRINT_SUCCESS -->
+<script type="text/javascript">
+// <![CDATA[
+	$(function()
+	{
+		alert("Action Successful\n\n(no proper success screen yet to simplify testing)");
+	});
+// ]]>
+</script>
+<!-- ENDIF -->
+
+<!-- IF S_MODE_EDIT and S_HAS_REVISION -->
+	<p id="explain">You have the option of either working from the latest submitted revision or the current article:</p>
+	<form method="post" id="work_form" action="">
+		<fieldset>
+			<select name="work_from" id="work_from" onchange="document.forms['work_form'].submit()">
+				<option value="0">&nbsp; Latest submitted revision</option>
+				<option <!-- IF S_SELECTED_CURRENT -->selected="selected" <!-- ENDIF -->value="1">&nbsp; Current article</option>
+			</select>
+			<input type="submit" value="{L_GO}" class="button2" />
+		</fieldset>
+	</form>
+	<br />
+	<span class="corners-bottom grey"><span></span></span></div>
+</div>
+<ul class="topiclist">
+	<li class="header"></li>
+</ul>
+
+<div class="main-content">
+	<div class="inner"><span class="corners-top grey"><span></span></span>
+<!-- ENDIF -->
+
+<form action="{U_ACTION}" method="post" enctype="multipart/form-data">
+	<fieldset class="fields2">
+		<!-- IF ERRORS --><p class="error" >&#8250; {ERRORS}</p><!-- ENDIF -->
+		<!-- IF ID --><input type="hidden" name="id" value="{ID}" /><!-- ENDIF -->
+		<!-- IF KB_ADMIN -->	
+			<hr />		
+			<h4>Moderator Options</h4>
+			<hr />
+			<!-- IF S_MODE_EDIT and S_HAS_REVISION -->
+				<div class="rules">
+					<div class="inner"><span class="corners-top"><span></span></span>
+						<strong>WARNING: This article has a pending revision.<br />Any direct changes made to the live article will be overwritten if the revision is approved.</strong>
+					<span class="corners-bottom"><span></span></span></div>
+				</div>
+			<!-- ENDIF -->
+			<dl>
+				<dt><label for="author_username">Author Username:</label><br />Use 'phpBB Team' for {U_PHPBB_TEAM}</dt>
+				<dd><input name="author_username" id="author_username" maxlength="150" value="{AUTHOR_USERNAME}" class="inputbox" style="width: 40%;" /> <!-- IF AUTHOR_USERNAME_FORMATTED -->({AUTHOR_USERNAME_FORMATTED})<!-- ENDIF --></dd>
+			</dl>
+			<!-- IF not IS_REDIRECT -->
+				<dl>
+					<dt><label for="as_moderator0">Submit as:</label></dt>
+					<dd><label for="as_moderator0"><input type="radio" name="as_moderator" id="as_moderator0" <!-- IF AS_MODERATOR == 1 -->checked="checked" <!-- ENDIF -->value="1" /> <!-- IF S_MODE_EDIT -->Revision<!-- ELSE -->Article requiring approval<!-- ENDIF -->&nbsp; &nbsp;</label><label for="as_moderator1"><input type="radio" name="as_moderator" id="as_moderator1" <!-- IF AS_MODERATOR == 2 -->checked="checked" <!-- ENDIF -->value="2" /> <span style="color:red;"><strong><!-- IF S_MODE_EDIT -->Direct Edit<!-- ELSE -->Approved article<!-- ENDIF --></strong></span></label></dd>
+				</dl>
+				<!-- IF S_MODE_EDIT -->
+					<dl id="edit_box">
+						<dt><label for="edit_reason">Edit Reason:<br /></label><strong>&#8250;</strong> You may want to include an edit message in the log.</dt>
+						<dd><textarea name="edit_reason" id="edit_reason" rows="3" class="inputbox">{EDIT_REASON}</textarea></dd>
+					</dl>
+				<!-- ENDIF -->
+				<br />
+			<!-- ENDIF -->
+		<!-- ENDIF -->
+
+		<!-- IF not IS_REDIRECT -->
+			<hr />
+			<h4>Ready to share your knowledge with other phpBB users? Submit an article here.<br />Please be sure to read the <a href="../article/kb-guidelines/">&lt;submission guideline&gt;</a>.</h4>
+			<hr />
+			<!-- IF not KB_ADMIN and S_MODE_EDIT and S_HAS_REVISION -->
+				<div class="rules">
+					<div class="inner"><span class="corners-top"><span></span></span>
+						<strong>WARNING: This article has a pending revision.<br />Please feel free to make changes if you have found a mistake in the previous revision submitted.<br />Any submitted changes will overwrite the previous revision and restart validation.</strong>		
+					<span class="corners-bottom"><span></span></span></div>
+				</div>
+			<!-- ENDIF -->
+		<!-- ENDIF -->
+		<br />
+		<dl>
+			<dt><label for="title">Title:</label></dt>
+			<dd><input name="title" id="title" maxlength="150" value="{TITLE}" class="inputbox" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="description">Description:<br /></label><strong>&#8250;</strong> A good description tells users what they should expect to find.<br /><strong>&#8250;</strong> BBCode is disabled<br /><strong>&#8250;</strong> Emoticons are disabled</dt>
+			<dd><textarea name="description" id="description" rows="3" class="inputbox" cols="30">{DESCRIPTION}</textarea></dd>
+		</dl>
+		<dl>
+			<dt><label for="category">Categories:<br /></label><strong>&#8250;</strong> Please select at least one.</dt>
+			<dd><p id="category"><!-- BEGIN category --><input type="checkbox" name="in_{category.KEY}" id="in_{category.KEY}" value="1"<!-- IF category.CHECKED -->checked="checked"<!-- ENDIF --> /> {category.CATEGORY}<br /><!-- END category --></p></dd>
+		</dl>
+		<dl>
+			<dt><label for="version">For phpBB Version:<br /></label><strong>&#8250;</strong> Please select at least one.</dt>
+			<dd><p id="version"><input type="checkbox" name="for_3_0" id="for_3_0" value="1"<!-- IF FOR_3_0 -->checked="checked"<!-- ENDIF --> /> phpBB 3.0<br /><input type="checkbox" name="for_3_1" id="for_3_1" value="1"<!-- IF FOR_3_1 -->checked="checked"<!-- ENDIF --> /> phpBB 3.1<br /></p></dd>
+		</dl>
+		<!-- IF IS_REDIRECT -->
+			<dl>
+				<dt><label for="text">Redirect Link:<br /></label><strong>&#8250;</strong> As this is for team members only, no validation or fixes are performed. Please make sure it's valid.</dt>
+				<dd><input name="text" id="text" maxlength="500" value="{TEXT}" class="inputbox" /></dd>
+			</dl>
+		<!-- ELSE -->
+			<dl>
+				<dt><label for="text">Article text:<br /></label><strong>&#8250;</strong> Please make sure your article meets the <a href="../article/kb-guidelines/">guidelines</a>.<br /><strong>&#8250;</strong> BBCode is enabled<br /><strong>&#8250;</strong> Emoticons are enabled</dt>
+				<dd><textarea name="text" id="text" rows="25" class="inputbox" cols="76">{TEXT}</textarea></dd>
+			</dl>
+			<dl>
+				<dt><label for="fileupload">Attached files: </label></dt>
+				<dd>
+					<!-- BEGIN attachments -->
+					<input type="hidden" name="{attachments.FIELD}" value="{attachments.ID}" />
+					<input type="button" value="Place inline" onclick="attach_inline({attachments.ID}, '{attachments.FILENAME}');" class="button2" />&nbsp; <input type="submit" name="delete_file[{attachments.ID}]" value="Delete file" class="button2" /> &nbsp; &nbsp;<strong>{attachments.ID} - {attachments.FILENAME}</strong><br />
+					<!-- END attachments -->
+				</dd>
+			</dl>
+			<dl>
+				<dt><label for="fileupload">Attach file: </label></dt>
+				<dd>
+					<input type="file" name="fileupload" id="fileupload" maxlength="262144" value="" class="inputbox autowidth" /> 
+					<input type="submit" name="add_file" value="Add the file" class="button2" />
+				</dd>
+			</dl>
+		<!-- ENDIF -->
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<!-- IF IS_REDIRECT -->
+			<input type="hidden" name="as_moderator" value="2" />
+			<input type="submit" tabindex="6" name="redirect" value="Submit Redirect" class="button1" />&nbsp; 
+		<!-- ELSE -->
+			<input type="submit" tabindex="5" name="preview" value="{L_PREVIEW}" class="button1" />&nbsp;
+			<input type="submit" tabindex="6" name="submit" value="{L_SUBMIT}" class="button1" />&nbsp; 
+		<!-- ENDIF -->
+	</fieldset>
+	{S_FORM_TOKEN}
+</form>
+<!-- INCLUDE support/docs/docs_footer.html -->

@@ -1,0 +1,26 @@
+<!-- INCLUDE support/docs/docs_header.html -->
+							<ul class="guide-menu">
+								<!-- BEGIN sections -->
+								<li class="level{sections.LEVEL}<!-- IF sections.S_SECTION_ACTIVE --> active<!-- ENDIF --><!-- IF sections.S_LAST_ROW --> last<!-- ENDIF -->"><a href="{sections.U_SECTION}">{sections.SECTION}</a></li>
+								<!-- END sections -->
+								<!--<li class="level1 last"><a href="moo">Last section here</a></li>-->
+							</ul>
+							<div class="sub-content document" id="docbook">
+								<div class="titlepage">
+									<h2 class="title" style="clear: both">{SECTION_TITLE}</h2>
+									<hr />
+								</div>
+								<div class="section" lang="en">
+								{SECTION_CONTENT}
+									<!-- IF S_COMMENTS_ENABLED -->
+										<!-- IF not S_AJAX_REQUEST && S_USER_LOGGED_IN -->
+										<script type="text/javascript" src="{T_TEMPLATE_PATH}/editor.js"></script>
+										<script type="text/javascript" src="{S_ROOT_PATH}js/support/docs_ug_comments.js"></script>
+										<!-- ENDIF -->
+									<h3>Article comments</h3>
+									<!-- INCLUDE support/docs/ug_display_comments.html -->
+									<!-- ENDIF -->
+									<div class="copyright">Content © 2011 phpBB Group — Licensed under the <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC Attribution-NonCommercial-ShareAlike 3.0 license</a></div>
+								</div>
+							</div>
+<!-- INCLUDE support/docs/docs_footer.html -->
