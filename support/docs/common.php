@@ -13,8 +13,7 @@ if (!defined('IN_PHPBB'))
 }
 
 // Relative path to root
-$root_path = '../../' . (isset($path_to_docs_root) ? $path_to_docs_root : '');
-
+$root_path = '../../../../' . (isset($path_to_docs_root) ? $path_to_docs_root : '');
 // Include the main website common.php
 require($root_path . 'common.php');
 include($phpbb_root_path . 'includes/functions_upload.php');
