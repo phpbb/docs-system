@@ -33,6 +33,9 @@ define('ABS_PATH_TO_DOCS', $base_path . 'support/docs/' . DOCS_LANG . '/' . DOCS
 // Table to associate docs/kb/etc comments to a topic id
 define('DOC_COMMENTS_TABLE', 'docs_comments');
 
+// Table to to store attachment id for ug/kib/etc
+define('DOC_COMMENTS_ATTACHMENTS_TABLE', 'docs_comments_attachments');
+
 // Domain name for posted links
 // No trailing slashes
 define('SITE_URL', generate_board_url(true));
@@ -47,17 +50,17 @@ if ($auth->acl_get('s_kb_add'))
 
 	if ($auth->acl_get('s_kb_approve'))
 	{
-		define('DOCS_ADMIN', TRUE);
+		//remove comment after testdefine('DOCS_ADMIN', TRUE);
 	}
 	else
 	{
-		define('DOCS_ADMIN', FALSE);
+		//remove comment after testdefine('DOCS_ADMIN', FALSE);
 	}
 }
 else
 {
 	define('DOCS_USER', FALSE);
-	define('DOCS_ADMIN', FALSE);
+	//remove comment after test define('DOCS_ADMIN', FALSE);
 }
 
 // Login/Logout Data
@@ -85,3 +88,4 @@ $template->assign_vars(array(
 
 // @TODO Figure out why this is necessary
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
+

@@ -1,3 +1,4 @@
+	
 									<div id="display_comments_block">
 										<!-- BEGIN comment -->
 										<div id="comment-{comment.COMMENT_ID}" class="ug_comment<!-- IF comment.IS_UNAPPROVED --> unapproved<!-- ENDIF -->">
@@ -14,7 +15,7 @@
 													<span id="del-sec-{comment.COMMENT_ID}">&bull; <a href="#" id="delete-{comment.COMMENT_ID}">delete</a></span>
 													<!-- ENDIF -->
 													<!-- IF comment.IS_UNAPPROVED -->
-														<span id="app-sec-{comment.COMMENT_ID}">&bull; <a href="{DOCS_UG_PATH}index.php?comment_action=approve&comment_approve_id={comment.COMMENT_ID}" id="approve-{comment.COMMENT_ID}">approve</a></span>
+														<span id="app-sec-{comment.COMMENT_ID}">&bull; <a href="#" id="approve-{comment.COMMENT_ID}">approve</a></span>
 													<!-- ENDIF -->
 												</div>
 												<!-- ENDIF -->
@@ -33,8 +34,15 @@
 											</div>
 										</div>
 										<!-- END comment -->
+										<!-- IF PAGINATION -->
+										<div class="pagination">
+											<span>{PAGINATION}</span>
+										</div>
+										<!-- ENDIF -->
+										<div style="clear:both;display:block;margin-bottom:20px;"></div>
 										<!-- IF S_USER_LOGGED_IN -->
-										<form method="post" action="./" id="add-comment">
+										<!--change the form-->
+										<form method="post" action="./" id="comment-form" enctype="multipart/form-data">
 											<div class="panel"<!-- IF S_AJAX_REQUEST && not COMMENT_ERROR --> style="display:none"<!-- ENDIF --> id="qr_editor_div">
 												<div class="inner">
 													<span class="corners-top"><span></span></span>
@@ -43,13 +51,13 @@
 		<div class="inner"><span class="corners-top"><span></span></span>
 
 		
-			<strong>Error messages go in here.</strong><br />
-			<span style="font-weight: bold"><a href="http://www.phpbb.com/rules/" class="postlink">Maybe a link too?</a></span>
-		
+			<!--strong>Error messages go in here.</strong><br />
+			<span style="font-weight: bold"><a href="http://www.phpbb.com/rules/" class="postlink">Maybe a link too?</a></span-->
+			<strong> Fill in below to submit your comment.</strong>
 
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
-													<!-- IF S_AJAX_REQUEST -->
+													<!-- disable S_AJAX_REQUEST -->
 													<div id="format-buttons">
 														<input type="button" class="button2" accesskey="b" name="addbbcode0" value=" B " style="font-weight:bold; width: 30px" onclick="bbstyle(0)" title="{L_BBCODE_B_HELP}" />
 														<input type="button" class="button2" accesskey="i" name="addbbcode2" value=" i " style="font-style:italic; width: 30px" onclick="bbstyle(2)" title="{L_BBCODE_I_HELP}" />
@@ -64,7 +72,7 @@
 														<input type="button" class="button2" accesskey="p" name="addbbcode14" value="Img" style="width: 40px" onclick="bbstyle(14)" title="{L_BBCODE_P_HELP}" />
 														<input type="button" class="button2" accesskey="w" name="addbbcode16" value="URL" style="text-decoration: underline; width: 40px" onclick="bbstyle(16)" title="{L_BBCODE_W_HELP}" />
 													</div>
-													<!-- ENDIF -->
+													<!-- end disable-->
 													<div id="comment-box">
 														<textarea style="height: 9em;" name="comment_text" id="comment_text" tabindex="3"></textarea>
 													</div>
@@ -98,7 +106,7 @@
 													<input type ="hidden" name="comment_action" value="add" />
 													<input type ="hidden" name="tab" value="{SELECTED_TAB}" />
 													<input type ="hidden" name="sec" value="{SELECTED_SEC}" />
-													<input type="submit" accesskey="s" tabindex="6" name="preview" value="Preview" class="button2" />&nbsp;<input type="submit" accesskey="s" tabindex="6" name="post" value="Submit" class="button1" onClick="add_comment_submit('{SELECTED_TAB}', '{SELECTED_SEC}'); return false;" />
+													<input type="submit" accesskey="s" tabindex="6" name="preview" value="Preview" class="button2" />&nbsp;<input id="comment_submit_button" type="button" accesskey="s" tabindex="6" name="post" value="Submit" class="button1" />
 													<!-- IF S_AJAX_REQUEST --><a href="#" class="right-box up" onclick="hide_qr(false); return false;" title="{L_COLLAPSE_QR}">Hide this box</a><!-- ENDIF -->
 													<span class="corners-bottom"><span></span></span>
 												</div>
@@ -125,3 +133,4 @@
 										</div>
 										<!-- ENDIF -->
 									</div>
+									

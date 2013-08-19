@@ -38,3 +38,5 @@ $template->assign_vars(array(
 	'S_BODY_CLASS'			=> 'support_docs ug support',
 	'S_ABS_PATH_TO_DOCS_UG'		=> ABS_PATH_TO_DOCS_UG,
 ));
+
+

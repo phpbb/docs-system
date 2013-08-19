@@ -14,16 +14,23 @@ define('IN_PHPBB', true);
 include('./common.php');
 require($root_path . 'includes/support/docs/functions_docs.php');
 
+//testing admin, remove after test
+define('DOCS_ADMIN', TRUE);
+
 $user->add_lang('posting');
 
 // Grab all the tabs that should be displayed
 $tabs = unserialize(str_replace("\xEF\xBB\xBF", '', file_get_contents('./data/' . DOCS_VERSION . '/' . DOCS_LANG . '/_tabs')));
 
 // Now see what the user asked to view
+// Tab selected by user
 $selected_tab = request_var('selected_tab', '');
+// Section in each tab selected by user
 $selected_sec = request_var('selected_sec', '');
 
-$comment_action = request_var('comment_action', '', true);
+// Comment actions submitted by the user, include admin actions such as edit, delete and approve
+//$comment_action = request_var('comment_action', '', true);
+$comment_action = request_var('comment_action','',true);
 
 //$is_ajax_request = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest' ? true : false;
 $is_ajax_request = isset($_SERVER['HTTP_X_PJAX']) ? true : false;
@@ -32,7 +39,7 @@ $is_data_submission = false;
 // Check for administrators
 // @TODO Fix the docs permissions
 if (DOCS_ADMIN)
-{
+{	
 	// If a comment id was specified without a tab (and thus without a section) see
 	// if it can be extrapolated. This will happen when deleting/approving/etc.
 	$comment_id = request_var('comment_id', 0, true);
@@ -59,10 +66,46 @@ if (DOCS_ADMIN)
 
 	// Display the administration tab
 	$tabs['adm'] = '[Administration]';
+	
+}
+// @Todo please move to common function file
+// Check comment attachment function
+// Return attachment id if found otherwise return 0
+function comment_check_attachment($comment_id)
+{
+	global $config, $db;
+	
+	$attachment_id=0;
+	
+	// Get the attachments ID
+	$sql = 'SELECT attach_id
+			FROM ' . DOC_COMMENTS_ATTACHMENTS_TABLE . '
+			WHERE comment_id = \'' . intval($comment_id) . '\' 
+			AND module = \'ug\'';
+	
+	$result = $db->sql_query($sql);
+
+	$row = $db->sql_fetchrow($result);
+
+	$attachment_id = $row['attach_id'];
+							
+	// free result
+	$db->sql_freeresult($result);
+	
+	return $attachment_id;
+}
+
+function comment_upload_attachment($comment_id)
+{
+					
 }
 
 if (DOCS_ADMIN && $selected_tab == 'adm')
 {
+
+	// Grab the navigation menu for admin tab
+	//$nav_bar = unserialize(str_replace("\xEF\xBB\xBF", '', file_get_contents('./data/' . DOCS_VERSION . '/' . DOCS_LANG . '/' . $selected_tab . '/_navigation')));
+
 	$nav_bar = array(
 		'update_docs'	=> array('Update Documentation', 1),
 		'log'			=> array('Activity Log', 1),
@@ -156,15 +199,19 @@ else
 	// COMMENTS BLOCK
 	//
 	
+	
+	// Comment actions - delete, add and approve
 
 	if ($comment_action != '')
 	{
 		// @TODO Sanity checks!!!
+		// updated sanity with $db->sql_escape
 		switch($comment_action)
 		{
 			case 'add':
 				if ($user->data['user_id'] != ANONYMOUS)
 				{
+
 					// @TODO Check that the comments section is valid by always submitting requests to the full static path
 					$comment_text = utf8_normalize_nfc(request_var('comment_text', '', true));
 					$comment_section = utf8_normalize_nfc('ug_' . $selected_tab . '_' . $selected_sec);
@@ -178,15 +225,37 @@ else
 						'user_id'			=> $user->data['user_id'],
 						'comment_approved'	=> DOCS_ADMIN ? 1 : 0,
 						'comment_private'	=> 0,
-						'comment_text'		=> $comment_text,
+						'comment_text'		=> $db->sql_escape($comment_text),
 						'comment_timestamp'	=> time(),
 						'bbcode_bitfield'	=> $bitfield,
 						'bbcode_uid'		=> $bbcode_uid,
 						'bbcode_flags'		=> (int) $flags,
 					);
+					print_r($_FILES);
+					if($_FILES){
+						$attachment_id = upload_comment_attachment();
+						echo "<h1>ganina, here is the ".$attachment_id."</h1>";
+					}
+					
+					if($comment_text&&$user->data['user_id']){
+						$sql = 'INSERT INTO ' . DOC_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_array);
+						$db->sql_query($sql);
+						$comment_id = $db->sql_nextid();
+					}
 
-					$sql = 'INSERT INTO ' . DOC_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_array);
-					$db->sql_query($sql);
+					// link comment table and attachment table together	
+					if(isset($attachment_id)&&isset($comment_id)){
+						// Insert the attachment id into the docs_comment_attachment table for reference
+						$sql_ary = array(
+							'attach_id'	=> $attachment_id,
+							'comment_id'		=> $comment_id,
+							'module'			=> 'ug'
+						);							
+
+						$sql = 'INSERT INTO ' . DOC_COMMENTS_ATTACHMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+						
+						$db->sql_query($sql);
+					}
 				}
 				else
 				{
@@ -214,6 +283,19 @@ else
 				if (DOCS_ADMIN && $user->data['user_id'] != ANONYMOUS)
 				{
 					$comment_id = request_var('comment_id', 0);
+					
+					$attach_id= comment_check_attachment($comment_id);
+					
+					// Get rid of records related to attachments
+					if($attach_id)
+					{
+						$sql = 'DELETE FROM ' . ATTACHMENTS_TABLE . ' WHERE attach_id = ' . $attach_id;
+						$db->sql_query($sql);
+						
+						$sql = 'DELETE FROM ' . DOC_COMMENTS_ATTACHMENTS_TABLE . ' WHERE comment_id = ' . $comment_id . ' AND attach_id = ' .$attach_id .' AND module = \'ug\'';
+						$db->sql_query($sql);
+					}
+					
 					$sql = 'DELETE FROM ' . DOC_COMMENTS_TABLE . ' WHERE comment_id = ' . $comment_id;
 					$db->sql_query($sql);
 				}
@@ -244,6 +326,70 @@ else
 						SET ' . $db->sql_build_array('UPDATE', $sql_array) . "
 						WHERE comment_id = '" . $comment_id . "'";
 					$db->sql_query($sql);
+					
+					if (isset($_FILES['attachment']['error']) && $_FILES['attachment']['error'] != UPLOAD_ERR_NO_FILE)
+					{	
+						$attach_id= comment_check_attachment($comment_id);
+						
+						// Get rid of records related to attachments
+						if($attach_id)
+						{	
+							$sql = 'DELETE FROM ' . ATTACHMENTS_TABLE . ' WHERE attach_id = ' . $attach_id;
+							$db->sql_query($sql);
+							
+							// @TODO There may be a direct functions file to include
+							require($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+
+							$filedata = upload_attachment('attachment', 0);
+
+							if (!sizeof($filedata['error']))
+							{
+								$sql_ary = array(
+									'physical_filename'	=> $filedata['physical_filename'],
+									'attach_comment'	=> '',
+									'real_filename'		=> $filedata['real_filename'],
+									'extension'			=> $filedata['extension'],
+									'mimetype'			=> $filedata['mimetype'],
+									'filesize'			=> $filedata['filesize'],
+									'filetime'			=> $filedata['filetime'],
+									'thumbnail'			=> $filedata['thumbnail'],
+									'is_orphan'			=> 0,
+									'in_message'		=> 0,
+									'',
+									'poster_id'			=> $user->data['user_id'],
+									);
+
+								$db->sql_query('INSERT INTO ' . ATTACHMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+
+								// Get the attachments ID
+								// @TODO Use the dbal function here
+								$sql = 'SELECT attach_id, real_filename
+										FROM ' . ATTACHMENTS_TABLE . '
+										WHERE physical_filename = \'' . $filedata['physical_filename'] . '\'
+										AND poster_id = ' . $user->data['user_id'];
+								$result = $db->sql_query($sql);
+
+								$row = $db->sql_fetchrow($result);
+
+								$attachment_id = $row['attach_id'];
+													
+								// Free result
+								$db->sql_freeresult($result);
+													
+								// Update document attachment table
+								$sql_array = array(
+									'attach_id' => $attachment_id,
+								);
+								$sql = 'UPDATE ' . DOC_COMMENTS_ATTACHMENTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_array) . " WHERE comment_id = '" . $comment_id . "' AND module='ug'";
+								$db->sql_query($sql);
+							}							
+
+						}
+						else
+						{
+							comment_upload_attachment($comment_id);
+						}
+					}
 				}
 				else
 				{
@@ -255,7 +401,13 @@ else
 
 	$topic_slug = 'ug' . '_' . $selected_tab . '_' . $selected_sec;
 
+	// Getting comments
 	// @TODO Potentially combine
+	
+	$start = request_var('start', 0);
+	//$limit = request_var('limit', (int) $config['topics_per_page']);
+	$limit = request_var('limit', 5);
+	
 	if (!DOCS_ADMIN)
 	{
 		$approved_sql = " AND c.comment_approved = 1";
@@ -266,6 +418,30 @@ else
 		$approved_sql = "";
 		$private_sql = "";
 	}
+	
+	// Total number of comments
+	/*$sql = 'SELECT COUNT(c.comment_id) AS total_comments
+			FROM ' . DOC_COMMENTS_TABLE . ' c
+			WHERE c.topic_id = "'. $topic_slug .'"'.
+				$approved_sql .
+				$private_sql;*/
+	$sql_array = array
+	(
+		'SELECT' => 'count(c.comment_id) AS total_comments',
+		'FROM' => array(
+			DOC_COMMENTS_TABLE => 'c',
+			USERS_TABLE => 'u',
+		),
+		'WHERE' => 'c.topic_id = "' . $topic_slug .
+			'" AND u.user_id = c.user_id' .
+			$approved_sql .
+			$private_sql
+	);
+
+	$sql = $db->sql_build_query('SELECT', $sql_array);
+	$result = $db->sql_query($sql);
+	$total_comments = (int) $db->sql_fetchfield('total_comments');
+	$db->sql_freeresult($result);
 
 	$sql_array = array
 	(
@@ -278,14 +454,18 @@ else
 			'" AND u.user_id = c.user_id' .
 			$approved_sql .
 			$private_sql,
-		'ORDER_BY' => 'c.comment_timestamp ASC',
+		'ORDER_BY' => 'c.comment_timestamp DESC',
 	);
 
 	$sql = $db->sql_build_query('SELECT', $sql_array);
-	$result = $db->sql_query($sql);
-
+	//$result = $db->sql_query($sql);
+	$result = $db->sql_query_limit($sql, $limit, intval($start));
+	
+	$page_url = '';//ABS_PATH_TO_DOCS_UG
+	
 	while ($comment_data = $db->sql_fetchrow($result))
 	{
+
 		$comment_text = generate_text_for_display($comment_data['comment_text'], $comment_data['bbcode_uid'], $comment_data['bbcode_bitfield'], $comment_data['bbcode_flags']);
 
 		decode_message($comment_data['comment_text'], $comment_data['bbcode_uid']);
@@ -303,13 +483,18 @@ else
 		));
 	}
 
+	
 	$template->assign_vars(array(
 		'S_COMMENTS_ENABLED'		=> true,
 		'COMMENT_ERROR'				=> true,		// Just a test @TODO Remove
+		'PAGINATION'     => generate_pagination(append_sid(ABS_PATH_TO_DOCS_UG . $selected_tab . '/' . $section_slug ), $total_comments, $limit, $start),
+		'PAGE_NUMBER'     => on_page($total_comments, $limit, $start)
 	));
+	
 }
 
-if ($comment_action != '' && $is_ajax_request)
+//if ($comment_action != '' && $is_ajax_request)
+if ($comment_action != '')
 {
 	$template->set_filenames(array(
 		'body'	=> DOCS_TEMPLATE_PATH . 'ug_display_comments.html')

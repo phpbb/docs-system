@@ -1,55 +1,31 @@
-/*
+ /*
  * Not for redistribution
  */
 
 var bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[list=]','[/list]','[img]','[/img]','[url]','[/url]','[flash=]', '[/flash]','[size=]','[/size]');
-var form_name = 'add-comment';
+var form_name = 'comment-form';
 var text_name = 'comment_text';
-
-function add_comment_submit(tab, section)
-{
-	alert(tab + '.....' + section);
-	
-	var a = "https://www.phpbb.local/support/docs/en/3.0/ug/?mode=add" + "&version=3.1&lang=en&selected_tab=" + tab + "&selected_sec=" + section + "&comment_text=" + jQuery("#comment_text").val();
-	
-	alert(a);
-
-	$.get(a, function(data)
-	{
-		$('#display_comments_block').replaceWith(data);
-	});
-	 
-	 e.preventDefault();
-	 return false;
-
-	/*jQuery.ajax({
-		type: "POST",
-		url: "index.php",
-		data: "mode=add" + "&version=3.1&lang=en&selected_tab=" + tab + "&selected_sec=" + section + "&comment_text=" + jQuery("#comment_text").val(),
-		success: function(html)
-		{
-			alert(html);
-			// Reload the comments
-			$('#display_comments_block').replaceWith(html);
-
-			//$('#qr_editor_div').css("display","none");
-		}
-	});*/
-}
 
 function comment_inline_edit(commentID)
 {
-	jQuery("div[id='comment-body-" + commentID + "']").toggle();
-	jQuery("div[id='comment-edit-" + commentID + "']").toggle();
-	jQuery("div[id='comment-body-" + commentID + "']").focus();
+	$("div[id='comment-body-" + commentID + "']").toggle();
+	$("div[id='comment-edit-" + commentID + "']").toggle();
+	$("div[id='comment-body-" + commentID + "']").focus();
 }
 
 function comment_edit(commentID)
 {
-	jQuery.ajax({
+	var comment = $("textarea#textarea-" + commentID + "").val();
+	if (comment == '')
+	{
+		alert('Pleae enter your comment.');
+		return;
+	}
+	
+	$.ajax({
 		type: "POST",
-		url: "index.php",
-		data: "mode=edit" + "&comment-id=" + commentID + "&new_comment_text=" + jQuery("textarea#textarea-" + commentID + "").val(),
+		url: window.location.pathname,
+		data: "comment_action=edit" + "&comment-id=" + commentID + "&new_comment_text=" + comment,
 		success: function(html)
 		{
 			// Reload the comments
@@ -63,10 +39,10 @@ function comment_delete(commentID)
 {
 	if (confirm("Are you sure you wish to delete this comment?"))
 	{
-		jQuery.ajax({
+		$.ajax({
 			type: "POST",
-			url: "index.php",
-			data: "mode=delete" + "&comment_id=" + commentID,
+			url: window.location.pathname,
+			data: "comment_action=delete" + "&comment_id=" + commentID,
 			success: function(html){
 				$('#display_comments_block').replaceWith(html);
 				return true;
@@ -80,43 +56,18 @@ function comment_approve(commentID)
 {
 	if (confirm("Are you sure you wish to approve this comment?"))
 	{
-		jQuery.ajax({
+		$.ajax({
 			type: "POST",
-			url: "index.php",
-			data: "mode=approve" + "&comment_id=" + commentID,
+			url: window.location.pathname,
+			data: "comment_action=approve" + "&comment_id=" + commentID,
 			success: function(html){
 				$('#display_comments_block').replaceWith(html);
 				return true;
 			}
-		})
+		});
 	}
 }
-$(document).ready(function()
-{
-	jQuery("form#add-comment").submit(function(e){
-		e.preventDefault();
-		return false;
-	})
 
-	jQuery("form[id^='new-form-']").submit(function(e){
-		e.preventDefault();
-		return false;
-	})
-
-	jQuery("a[id^='delete-']").live('click', function()
-	{
-		var delID = jQuery(this).attr('id').split('-')[1];
-		comment_delete(delID);
-		return false;
-	})
-
-	jQuery("a[id^='approve-']").live('click', function()
-	{
-		var appID = jQuery(this).attr('id').split('-')[1];
-		comment_approve(appID);
-		return false;
-	})
-})
 
 function hide_qr(show)
 {
@@ -128,3 +79,77 @@ function hide_qr(show)
 	}*/
 	return true;
 }
+
+$(function(){
+	//why so many parameters?
+	//var a = window.location.pathname + "?mode=add" + "&version=3.0&lang=en&selected_tab=" + tab + "&selected_sec=" + section + "&comment_text=" + jQuery("#comment_text").val();
+
+	$(document).delegate('input#comment_submit_button', 'click',function(e)
+	{
+		e.preventDefault();
+		
+		var comment = $('#comment_text').val();
+		if (comment == '')
+		{
+			$('div.rules').find('div.inner').empty();
+			$('div.rules').find('div.inner').html('<span class="corners-top"><span></span></span><strong>Please enter your comment</strong><span class="corners-bottom"><span></span></span>');
+			return;
+		}
+		/*
+		var a = window.location.pathname + "?comment_action=add&comment_text=" + comment;
+		$.get(a, function(data)
+		{
+			$('#display_comments_block').replaceWith(data);
+		});
+		*/
+		// Replaced with post to submit attachment
+		$.post (
+			window.location.pathname,
+			$('#comment-form').serialize(),
+			function(data)
+			{
+				$('#display_comments_block').replaceWith(data);
+			}
+		);
+	});
+
+	$(document).delegate('input[name=add_attachment]', 'click',function(e)
+	{
+		e.preventDefault();
+
+		$('#comment-form').attr("action", 'http://docs.phpbb.local/support/docs/en/3.0/ug/');
+		$('#comment-form').submit();
+/*
+
+		$.post (
+			window.location.pathname,
+			$('#comment-form').serialize(),
+			function(data)
+			{
+				$('#display_comments_block').replaceWith(data);
+			}
+		);*/
+	});	
+	
+	$("form[id^='new-form-']").submit(function(e){
+		e.preventDefault();
+		return false;
+	})
+
+
+	$(document).delegate("a[id^='delete-']", 'click',function(e)
+	{
+		e.preventDefault();
+		
+		var delID = $(this).attr('id').split('-')[1];
+		comment_delete(delID);
+	})
+
+
+	$(document).delegate("a[id^='approve-']", 'click',function(e)
+	{
+		e.preventDefault();
+		var appID = $(this).attr('id').split('-')[1];
+		comment_approve(appID);
+	})
+});
