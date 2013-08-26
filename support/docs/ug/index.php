@@ -231,10 +231,10 @@ else
 						'bbcode_uid'		=> $bbcode_uid,
 						'bbcode_flags'		=> (int) $flags,
 					);
-					print_r($_FILES);
+					//print_r($_FILES);
 					if($_FILES){
 						$attachment_id = upload_comment_attachment();
-						echo "<h1>ganina, here is the ".$attachment_id."</h1>";
+						//echo "<h1>ganina, here is the ".$attachment_id."</h1>";
 					}
 					
 					if($comment_text&&$user->data['user_id']){

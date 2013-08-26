@@ -106,29 +106,24 @@ $(function(){
 		$.post (
 			window.location.pathname,
 			$('#comment-form').serialize(),
-			function(data)
+			function (data)
 			{
 				$('#display_comments_block').replaceWith(data);
 			}
 		);
 	});
 
-	$(document).delegate('input[name=add_attachment]', 'click',function(e)
+	$(document).delegate('input[name=add_attachment]', 'click',function()
 	{
-		e.preventDefault();
-
-		$('#comment-form').attr("action", 'http://docs.phpbb.local/support/docs/en/3.0/ug/');
-		$('#comment-form').submit();
-/*
-
-		$.post (
-			window.location.pathname,
-			$('#comment-form').serialize(),
-			function(data)
+		$('#comment-form').ajaxForm
+		({
+			url: window.location.pathname,
+			type: "post",
+			success: function (data)
 			{
 				$('#display_comments_block').replaceWith(data);
 			}
-		);*/
+		});
 	});	
 	
 	$("form[id^='new-form-']").submit(function(e){
