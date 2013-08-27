@@ -190,7 +190,7 @@ else
 
 	//ug_report_error('You are not authorized to access this feature.', $is_ajax_request);
 	
-	$submit = (isset($_POST['post'])||isset($_POST)) ? true : false;
+	$submit = (isset($_POST['post'])||$_POST) ? true : false;
 
 	//uploading attachment
 	if($submit)
