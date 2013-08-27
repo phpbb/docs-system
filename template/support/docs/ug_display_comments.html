@@ -42,7 +42,7 @@
 										<div style="clear:both;display:block;margin-bottom:20px;"></div>
 										<!-- IF S_USER_LOGGED_IN -->
 										<!--change the form-->
-										<form method="post" action="./" id="comment-form" enctype="multipart/form-data">
+										<form method="post" action="" id="comment-form" enctype="multipart/form-data">
 											<div class="panel"<!-- IF S_AJAX_REQUEST && not COMMENT_ERROR --> style="display:none"<!-- ENDIF --> id="qr_editor_div">
 												<div class="inner">
 													<span class="corners-top"><span></span></span>
@@ -86,7 +86,8 @@
 													<dl>
 														<dt class="bold">Attachment:</dt>
 														<dd>
-															{attachments.TITLE} ({attachments.SIZE})
+															{attachments.TITLE} ({attachments.SIZE} bytes)
+															<input type="hidden" name="attachments[]" value="{attachments.ID}" />
 															<input type="submit" name="delete_attachment[{attachments.ID}]" value="Delete attachment" class="button2" />
 														</dd>
 													</dl>
