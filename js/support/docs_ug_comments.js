@@ -80,6 +80,7 @@ function hide_qr(show)
 	return true;
 }
 
+
 $(function(){
 	//why so many parameters?
 	//var a = window.location.pathname + "?mode=add" + "&version=3.0&lang=en&selected_tab=" + tab + "&selected_sec=" + section + "&comment_text=" + jQuery("#comment_text").val();
@@ -113,6 +114,13 @@ $(function(){
 		);
 	});
 
+	$(document).delegate("input[name^='delete_']", 'click',function(e)
+	{
+		e.preventDefault();
+		
+		alert('haha');
+	});	
+	
 	$(document).delegate('input[name=add_attachment]', 'click',function()
 	{
 		$('#comment-form').ajaxForm
@@ -126,10 +134,17 @@ $(function(){
 		});
 	});	
 	
+	$(document).delegate("input[name^='delete_']", 'click',function()
+	{
+		alert('haha');
+	});	
+	
+	
+	
 	$("form[id^='new-form-']").submit(function(e){
 		e.preventDefault();
 		return false;
-	})
+	});
 
 
 	$(document).delegate("a[id^='delete-']", 'click',function(e)
@@ -138,13 +153,13 @@ $(function(){
 		
 		var delID = $(this).attr('id').split('-')[1];
 		comment_delete(delID);
-	})
-
+	});
+	
 
 	$(document).delegate("a[id^='approve-']", 'click',function(e)
 	{
 		e.preventDefault();
 		var appID = $(this).attr('id').split('-')[1];
 		comment_approve(appID);
-	})
+	});
 });

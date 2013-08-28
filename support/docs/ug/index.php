@@ -190,7 +190,7 @@ else
 
 	//ug_report_error('You are not authorized to access this feature.', $is_ajax_request);
 	
-	$submit = (isset($_POST['post'])||$_POST) ? true : false;
+	$submit = ($_POST) ? true : false;
 
 	//uploading attachment
 	if($submit)
@@ -207,43 +207,51 @@ else
 			$attachment_id = $attachment['attach_id'];
 		}
 		
-		// delete attachment is submit delete action
-		$delete_attachment = request_var('delete_attachment', '');
+		//$attachments = request_var('attachments', '');
+		$attachments=$_POST['attachments'];
 		
+		// delete attachment is submit delete action
+		// why cannot use request_var here
+		$delete_attachment = $_POST['delete_attachment'];
 		if(isset($delete_attachment)&&count($delete_attachment)>0)
 		{
 			foreach($delete_attachment AS $k=>$v) $attach_id = $k;
 			
 			$sql = 'DELETE FROM ' . ATTACHMENTS_TABLE . ' WHERE attach_id = ' . $attach_id;
-			$db->sql_query($sql);
+			$result=$db->sql_query($sql);
+			
+			// After delete pop deleted id
+			if($result&&count($attachments)>0)
+			{
+				$temp = array();
+				array_push($temp,$attach_id);
+				$attachments = array_diff($attachments, $temp);
+			}
 		}
 		
-	}
-	
-	$attachments = request_var('attachments', '');
-	
-	if($attachments)
-	{
-		if(count($attachments)>0)
+		
+		if($attachments&&count($attachments)>0)
 		{
 			foreach($attachments AS $k=>$v) $ids[]=$v;
-		
-			$sql = 'SELECT *
-					FROM ' . ATTACHMENTS_TABLE . '
-					WHERE attach_id IN (' . array_map('intval', implode(',', $ids)) . ')';;
 			
+			$sql = 'SELECT *
+						FROM ' . ATTACHMENTS_TABLE . '
+						WHERE attach_id IN (' . implode(',', $ids) . ')';
+				
 			$result = $db->sql_query($sql);
 
 			while ($result = $db->sql_fetchrow($result))
 			{
 				$template->assign_block_vars('attachments', array(
-						'ID' 	=> $result['attach_id'],
-						'TITLE'	=> $result['real_filename'],
-						'SIZE' 	=> $result['filesize']
+							'ID' 	=> $result['attach_id'],
+							'TITLE'	=> $result['real_filename'],
+							'SIZE' 	=> $result['filesize']
 				));
 			}
 		}
+			
 	}
+	
 	
 	//
 	// COMMENTS BLOCK
@@ -280,14 +288,14 @@ else
 						'bbcode_flags'		=> (int) $flags,
 					);
 					
-					if($comment_text&&$user->data['user_id']){
+					if(trim($comment_text)!=""&&$user->data['user_id']){
 						$sql = 'INSERT INTO ' . DOC_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_array);
 						$db->sql_query($sql);
 						$comment_id = $db->sql_nextid();
 					}
 
 					// link comment table and attachment table together	
-					if(isset($attachment_id)&&isset($comment_id)){
+					if(intval($attachment_id)>0&&intval($comment_id)>0){
 						// Insert the attachment id into the docs_comment_attachment table for reference
 						$sql_ary = array(
 							'attach_id'	=> $attachment_id,
@@ -295,6 +303,7 @@ else
 							'module'			=> 'ug'
 						);							
 
+						echo "<h1>i actually reached here.</h1>";
 						$sql = 'INSERT INTO ' . DOC_COMMENTS_ATTACHMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 						
 						$db->sql_query($sql);
