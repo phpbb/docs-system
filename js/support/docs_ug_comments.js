@@ -68,6 +68,19 @@ function comment_approve(commentID)
 	}
 }
 
+function delete_attachment(attach_id)
+{
+	var form_data = $('#comment-form').serializeArray();
+	form_data.push({ name: "delete_attach", value: attach_id });
+	$.post (
+		window.location.pathname,
+		form_data,
+		function (data)
+		{
+			$('#display_comments_block').replaceWith(data);
+		}
+	);
+}
 
 function hide_qr(show)
 {
@@ -114,12 +127,8 @@ $(function(){
 		);
 	});
 
-	$(document).delegate("input[name^='delete_']", 'click',function(e)
-	{
-		e.preventDefault();
-		
-		alert('haha');
-	});	
+	//$(document).delegate("input[name^='delete_']", 'click',function(e)
+
 	
 	$(document).delegate('input[name=add_attachment]', 'click',function()
 	{
@@ -134,13 +143,7 @@ $(function(){
 		});
 	});	
 	
-	$(document).delegate("input[name^='delete_']", 'click',function()
-	{
-		alert('haha');
-	});	
-	
-	
-	
+
 	$("form[id^='new-form-']").submit(function(e){
 		e.preventDefault();
 		return false;
