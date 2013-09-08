@@ -68,32 +68,7 @@ if (DOCS_ADMIN)
 	$tabs['adm'] = '[Administration]';
 	
 }
-// @Todo please move to common function file
-// Check comment attachment function
-// Return attachment id if found otherwise return 0
-function comment_check_attachment($comment_id)
-{
-	global $config, $db;
-	
-	$attachment_id=0;
-	
-	// Get the attachments ID
-	$sql = 'SELECT attach_id
-			FROM ' . DOC_COMMENTS_ATTACHMENTS_TABLE . '
-			WHERE comment_id = \'' . intval($comment_id) . '\' 
-			AND module = \'ug\'';
-	
-	$result = $db->sql_query($sql);
 
-	$row = $db->sql_fetchrow($result);
-
-	$attachment_id = $row['attach_id'];
-							
-	// free result
-	$db->sql_freeresult($result);
-	
-	return $attachment_id;
-}
 
 if (DOCS_ADMIN && $selected_tab == 'adm')
 {
@@ -524,6 +499,28 @@ else
 			'IS_ADMIN'		=> DOCS_ADMIN ? true : false,
 			'CAN_EDIT'		=> can_edit_comment($comment_data['user_id']),
 		));
+		
+		// Get comment attachments 
+
+		$sql = 'SELECT a.* 
+			FROM '.	DOC_COMMENTS_ATTACHMENTS_TABLE.' d
+			INNER JOIN '.ATTACHMENTS_TABLE.' a ON d.attach_id=a.attach_id 
+			WHERE d.comment_id='. intval($comment_id).' and module=\'ug\'';
+		
+		$attachment_data = $db->sql_query($sql);
+		
+		if(count($attachment_data)>0)
+		{
+			$attach = array();
+			while ($attach = $db->sql_fetchrow($attachment_data)))
+			{
+				$template->assign_block_vars('saved_attachment', array(
+						'ID' 	=> $attach['attach_id'],
+						'TITLE'	=> $attach['real_filename'],
+						'SIZE' 	=> $attach['filesize']
+				));
+			}
+		}
 	}
 
 	

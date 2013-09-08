@@ -23,6 +23,12 @@
 											</div>
 											<div id="comment-body-{comment.COMMENT_ID}" class="ug_comment_body">
 												{comment.TEXT}
+												<br/>
+													<!-- BEGIN saved_attachment -->
+														<p>
+															{saved_attachment.TITLE} ({saved_attachment.SIZE} bytes)
+														</p>
+													<!-- END attachments -->
 											</div>
 											<div id="comment-edit-{comment.COMMENT_ID}" class="ug_comment_body_edit" style="display: none;">
 												<form id="new-form-{comment.COMMENT_ID}" method="post" action="">
