@@ -94,7 +94,7 @@
 														<dd>
 															{attachments.TITLE} ({attachments.SIZE} bytes)
 															<input type="hidden" name="attachments[]" value="{attachments.ID}" />
-															<input type="submit" name="delete_attachment[{attachments.ID}]" value="Delete attachment" class="button2" />
+															<input type="submit" name="delete_attachment[{attachments.ID}]" onclick="delete_attachment({attachments.ID});return false;" value="Delete attachment" class="button2" />
 														</dd>
 													</dl>
 													<!-- END attachments -->

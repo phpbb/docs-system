@@ -68,6 +68,19 @@ function comment_approve(commentID)
 	}
 }
 
+function delete_attachment(attach_id)
+{
+	var form_data = $('#comment-form').serializeArray();
+	form_data.push({ name: "delete_attach", value: attach_id });
+	$.post (
+		window.location.pathname,
+		form_data,
+		function (data)
+		{
+			$('#display_comments_block').replaceWith(data);
+		}
+	);
+}
 
 function hide_qr(show)
 {
@@ -79,6 +92,7 @@ function hide_qr(show)
 	}*/
 	return true;
 }
+
 
 $(function(){
 	//why so many parameters?
@@ -113,6 +127,9 @@ $(function(){
 		);
 	});
 
+	//$(document).delegate("input[name^='delete_']", 'click',function(e)
+
+	
 	$(document).delegate('input[name=add_attachment]', 'click',function()
 	{
 		$('#comment-form').ajaxForm
@@ -126,10 +143,11 @@ $(function(){
 		});
 	});	
 	
+
 	$("form[id^='new-form-']").submit(function(e){
 		e.preventDefault();
 		return false;
-	})
+	});
 
 
 	$(document).delegate("a[id^='delete-']", 'click',function(e)
@@ -138,13 +156,13 @@ $(function(){
 		
 		var delID = $(this).attr('id').split('-')[1];
 		comment_delete(delID);
-	})
-
+	});
+	
 
 	$(document).delegate("a[id^='approve-']", 'click',function(e)
 	{
 		e.preventDefault();
 		var appID = $(this).attr('id').split('-')[1];
 		comment_approve(appID);
-	})
+	});
 });

@@ -165,60 +165,56 @@ else
 
 	//ug_report_error('You are not authorized to access this feature.', $is_ajax_request);
 	
-	$submit = (isset($_POST['post'])||$_POST) ? true : false;
+	$submit = ($_POST) ? true : false;
 
+	$attached_ids=array();
+	
 	//uploading attachment
 	if($submit)
-	{
+	{	
 		if($_FILES)
 		{
 			$attachment = upload_comment_attachment();
-			$template->assign_block_vars('attachments', array(
+			/*$template->assign_block_vars('attachments', array(
 					'ID' 	=> $attachment['attach_id'],
 					'TITLE'	=> $attachment['real_filename'],
 					'SIZE' 	=> $attachment['filesize']
-			));
+			));*/
 			// Grab attachment id for later add post use
 			$attachment_id = $attachment['attach_id'];
+			array_push($attached_ids,$attachment_id);
 		}
+		
+		
+		//$attachments = request_var('attachments', '');
+		$attachments=$_POST['attachments'];
 		
 		// delete attachment is submit delete action
-		$delete_attachment = request_var('delete_attachment', '');
-		
-		if(isset($delete_attachment)&&count($delete_attachment)>0)
-		{
-			foreach($delete_attachment AS $k=>$v) $attach_id = $k;
-			
-			$sql = 'DELETE FROM ' . ATTACHMENTS_TABLE . ' WHERE attach_id = ' . $attach_id;
-			$db->sql_query($sql);
-		}
-		
-	}
-	
-	$attachments = request_var('attachments', '');
-	
-	if($attachments)
-	{
-		if(count($attachments)>0)
-		{
-			foreach($attachments AS $k=>$v) $ids[]=$v;
-		
-			$sql = 'SELECT *
-					FROM ' . ATTACHMENTS_TABLE . '
-					WHERE attach_id IN (' . array_map('intval', implode(',', $ids)) . ')';;
-			
-			$result = $db->sql_query($sql);
+		// why cannot use request_var here
+		$del_attachment_id = $_POST['delete_attach'];
 
-			while ($result = $db->sql_fetchrow($result))
+		if(isset($del_attachment_id)&&intval($del_attachment_id)>0)
+		{
+
+			$sql = 'DELETE FROM ' . ATTACHMENTS_TABLE . ' WHERE attach_id = ' . $del_attachment_id;
+			$result=$db->sql_query($sql);
+			
+			// After delete pop deleted id
+			if($result&&count($attachments)>0)
 			{
-				$template->assign_block_vars('attachments', array(
-						'ID' 	=> $result['attach_id'],
-						'TITLE'	=> $result['real_filename'],
-						'SIZE' 	=> $result['filesize']
-				));
-			}
+				$temp = array();
+				array_push($temp,$del_attachment_id);
+				$attachments = array_diff($attachments, $temp);
+			}		
 		}
+		
+		if($attachments&&count($attachments)>0)
+		{
+			foreach($attachments AS $k=>$v) array_push($attached_ids,$v);
+		}
+					
 	}
+	
 	
 	//
 	// COMMENTS BLOCK
@@ -255,24 +251,34 @@ else
 						'bbcode_flags'		=> (int) $flags,
 					);
 					
-					if($comment_text&&$user->data['user_id']){
+					if(trim($comment_text)!=""&&$user->data['user_id']){
 						$sql = 'INSERT INTO ' . DOC_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_array);
 						$db->sql_query($sql);
 						$comment_id = $db->sql_nextid();
 					}
 
 					// link comment table and attachment table together	
-					if(isset($attachment_id)&&isset($comment_id)){
+					if(count($attached_ids)>0&&intval($comment_id)>0){
 						// Insert the attachment id into the docs_comment_attachment table for reference
-						$sql_ary = array(
-							'attach_id'	=> $attachment_id,
-							'comment_id'		=> $comment_id,
-							'module'			=> 'ug'
-						);							
-
-						$sql = 'INSERT INTO ' . DOC_COMMENTS_ATTACHMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+						$i=0;
 						
-						$db->sql_query($sql);
+						while($i<count($attached_ids))
+						{
+							$sql_ary = array(
+								'attach_id'	=> $attached_ids[$i],
+								'comment_id' => $comment_id,
+								'module'=> 'ug'
+							);							
+
+							$sql = 'INSERT INTO ' . DOC_COMMENTS_ATTACHMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+							
+							$db->sql_query($sql);
+							
+							$i++;
+						}
+						
+						// Reset attachment arrays
+						$attached_ids=array();
 					}
 				}
 				else
@@ -416,7 +422,27 @@ else
 			break;
 		}
 	}
+	// Rending uploaded attachment, must put this function below comment_action to ensure if the form is uploaded then the form is resetted
+	
+	if(count($attached_ids)>0)
+	{
+		$sql = 'SELECT *
+					FROM ' . ATTACHMENTS_TABLE . '
+					WHERE attach_id IN (' . implode(',', $attached_ids) . ')';
 
+		$attach_result = $db->sql_query($sql);
+
+		while ($result = $db->sql_fetchrow($attach_result))
+		{
+			$template->assign_block_vars('attachments', array(
+						'ID' 	=> $result['attach_id'],
+						'TITLE'	=> $result['real_filename'],
+						'SIZE' 	=> $result['filesize']
+			));
+		}
+	}
+	
+	
 	$topic_slug = 'ug' . '_' . $selected_tab . '_' . $selected_sec;
 
 	// Getting comments
