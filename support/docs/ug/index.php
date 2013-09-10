@@ -173,7 +173,8 @@ else
 	if($submit)
 	{	
 		if($_FILES)
-		{
+		{	echo "cry";
+			exit;
 			$attachment = upload_comment_attachment();
 			/*$template->assign_block_vars('attachments', array(
 					'ID' 	=> $attachment['attach_id'],
@@ -183,6 +184,7 @@ else
 			// Grab attachment id for later add post use
 			$attachment_id = $attachment['attach_id'];
 			array_push($attached_ids,$attachment_id);
+			echo "i am uploaded";
 		}
 		
 		
@@ -531,21 +533,17 @@ else
 		$sql = 'SELECT a.* 
 			FROM '.	DOC_COMMENTS_ATTACHMENTS_TABLE.' d
 			INNER JOIN '.ATTACHMENTS_TABLE.' a ON d.attach_id=a.attach_id 
-			WHERE d.comment_id='. intval($comment_id).' and module=\'ug\'';
+			WHERE d.comment_id='. intval($comment_data['comment_id']).' and d.module=\'ug\'';
 		
 		$attachment_data = $db->sql_query($sql);
 		
-		if(count($attachment_data)>0)
+		while ($attach = $db->sql_fetchrow($attachment_data))
 		{
-			$attach = array();
-			while ($attach = $db->sql_fetchrow($attachment_data)))
-			{
-				$template->assign_block_vars('saved_attachment', array(
+			$template->assign_block_vars('comment.saved_attachment', array(
 						'ID' 	=> $attach['attach_id'],
 						'TITLE'	=> $attach['real_filename'],
-						'SIZE' 	=> $attach['filesize']
-				));
-			}
+						'SIZE' 	=> $attach['filesize'],
+			));
 		}
 	}
 

@@ -117,6 +117,16 @@ $(function(){
 		});
 		*/
 		// Replaced with post to submit attachment
+		$('#comment-form').ajaxForm
+		({
+			url: window.location.pathname,
+			type: "post",
+			success: function (data)
+			{
+				$('#display_comments_block').replaceWith(data);
+			}
+		});		
+		/*
 		$.post (
 			window.location.pathname,
 			$('#comment-form').serialize(),
@@ -124,7 +134,7 @@ $(function(){
 			{
 				$('#display_comments_block').replaceWith(data);
 			}
-		);
+		);*/
 	});
 
 	//$(document).delegate("input[name^='delete_']", 'click',function(e)
