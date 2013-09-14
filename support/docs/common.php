@@ -89,3 +89,5 @@ $template->assign_vars(array(
 // @TODO Figure out why this is necessary
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
 
+
+

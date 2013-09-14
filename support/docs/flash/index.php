@@ -14,6 +14,8 @@ define('IN_PHPBB', true);
 require('./common.php');
 
 // Define the 3.0 flash tutorials
+// dumping this into a database
+
 $tutorials_3 = array(
 	array('title' => 'Add a moderator',			'name' => '3.0_add_moderator'),
 	array('title' => 'Manage attachments',		'name' => '3.0_attachments'),
@@ -29,6 +31,7 @@ $tutorials_3 = array(
 	array('title' => 'Word censor',				'name' => '3.0_word_censor'),
 );
 
+
 // Retrieve the version the user would like to see
 $version = request_var('version', '');
 $version = in_array($version, array('3.0')) ? $version : '3.0';
@@ -36,12 +39,20 @@ $tutorials = ($version == '3.0') ? $tutorials_3 : /*$tutorials_3_2*/'';
 
 $template->assign_var('V_VERSION', $version);
 
-/**
- * Eep, someone wants to see a specific tutorial
- */
+// Add in admin console
+$console = request_var('console','');
 $tutorial_id = request_var('tid', -1);
-if (!empty($version) && $tutorial_id >= 0 && isset($tutorials[$tutorial_id]))
+
+if (isset($console) && $console=="adm")
 {
+	$template->set_filenames(array(
+		'body' => DOCS_TEMPLATE_PATH . 'flash_adm.html',
+	));
+	$tab= 'manage';
+}
+else if (!empty($version) && $tutorial_id >= 0 && isset($tutorials[$tutorial_id]))
+{
+	// show tutorial detail
 	$template->set_filenames(array(
 		'body' => DOCS_TEMPLATE_PATH . 'flash_swf.html')
 	);
@@ -51,12 +62,9 @@ if (!empty($version) && $tutorial_id >= 0 && isset($tutorials[$tutorial_id]))
 		'V_TITLE'	=> $tutorials[$tutorial_id]['title'])
 	);
 }
-
-/**
- * List the flash tutorials
- */
 else/* if (!empty($version))*/
 {
+	// list tutorials
 	$template->set_filenames(array(
 		'body' => DOCS_TEMPLATE_PATH . 'flash_body.html')
 	);
@@ -75,5 +83,5 @@ $template->assign_vars(array(
 	//'S_BODY_CLASS'		=> 'support tutorials',
 ));
 
-page_header($page_title, false);
+process_page($page_title, $tab);
 page_footer(false);

@@ -36,6 +36,7 @@ include($root_path . 'includes/support/docs/functions_knowldgebase.' . $phpEx);
 //
 $tabs = array('' => 'View Article Index');
 
+/*
 if ($auth->acl_get('s_kb_add'))
 {
 	define('KB_USER', TRUE);
@@ -63,6 +64,16 @@ else
 
 	$tabs['login'] = 'Login for more options';
 }
+*/
+// test account remove after test
+	define('KB_USER', TRUE);
+	define('KB_ADMIN', TRUE);
+		$tabs['redirect'] = 'Submit a Redirect';
+		$tabs['adm'] = 'Administration';
+	$tabs['manage'] = 'Manage Your Articles';
+	$tabs['submit'] = 'Submit an Article';
+// end test
+	
 
 //
 // Table names

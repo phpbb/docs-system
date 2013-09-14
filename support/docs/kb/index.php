@@ -21,6 +21,7 @@ switch ($selected_version)
 {
 	case 'adm':
 		// Only KB Admins can proceed
+
 		if (!KB_ADMIN)
 		{
 			if (!KB_USER)
@@ -32,7 +33,7 @@ switch ($selected_version)
 				display_message('This is a restricted area');
 			}
 		}
-
+	
 		// If an administrative action was requested, then we do that
 		if (isset($_POST['mode']))
 		{
@@ -79,7 +80,7 @@ switch ($selected_version)
 		$sql = 'SELECT a.*, u.user_id, u.user_colour, u.username
 				FROM ' . KB_ARTICLES_TABLE . ' a, ' . USERS_TABLE . ' u
 				WHERE u.user_id = a.author_id ' .
-		$adm_narrow;
+				$adm_narrow;
 
 		$page_title = 'Administration';
 		$mode = 'adm';
