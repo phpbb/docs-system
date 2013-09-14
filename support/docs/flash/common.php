@@ -34,7 +34,6 @@ include($root_path . 'includes/support/docs/functions_flash.' . $phpEx);
 	define('FLASH_ADMIN', TRUE);
 
 	$tabs['manage'] = 'Manage Flash';
-	$tabs['add'] = 'Add Flash';
 
 //}
 
@@ -50,6 +49,7 @@ include($root_path . 'includes/support/docs/functions_flash.' . $phpEx);
 //
 $template->assign_vars(array(
 	'S_IN_DOCS_FLASH'			=> true,
+	'S_LISTING' => true,
 	'S_BODY_CLASS'				=> 'support_docs flash support tutorials',
 	'S_ABS_PATH_TO_DOCS_FLASH'	=> ABS_PATH_TO_DOCS_FLASH,
 ));
