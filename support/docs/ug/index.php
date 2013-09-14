@@ -69,6 +69,26 @@ if (DOCS_ADMIN)
 	
 }
 
+function comment_check_attachment($comment_id)
+{
+	global $db;
+	// Get comment attachments 
+	$sql = 'SELECT a.* 
+			FROM '.	DOC_COMMENTS_ATTACHMENTS_TABLE.' d
+			INNER JOIN '.ATTACHMENTS_TABLE.' a ON d.attach_id=a.attach_id 
+			WHERE d.comment_id='. intval($comment_id).' and d.module=\'ug\'';
+		
+	$attachment_data = $db->sql_query($sql);
+	
+	$result=array();
+	
+	while ($attach = $db->sql_fetchrow($attachment_data))
+	{
+		$result[]=$attach;
+	}
+	
+	return $result;
+}
 
 if (DOCS_ADMIN && $selected_tab == 'adm')
 {
@@ -173,7 +193,8 @@ else
 	if($submit)
 	{	
 		if($_FILES)
-		{
+		{	echo "cry";
+			exit;
 			$attachment = upload_comment_attachment();
 			/*$template->assign_block_vars('attachments', array(
 					'ID' 	=> $attachment['attach_id'],
@@ -183,6 +204,7 @@ else
 			// Grab attachment id for later add post use
 			$attachment_id = $attachment['attach_id'];
 			array_push($attached_ids,$attachment_id);
+			echo "i am uploaded";
 		}
 		
 		
@@ -308,16 +330,19 @@ else
 				{
 					$comment_id = request_var('comment_id', 0);
 					
-					$attach_id= comment_check_attachment($comment_id);
+					$attach_array= comment_check_attachment($comment_id);
 					
 					// Get rid of records related to attachments
-					if($attach_id)
+					if(count($attach_array)>0)
 					{
-						$sql = 'DELETE FROM ' . ATTACHMENTS_TABLE . ' WHERE attach_id = ' . $attach_id;
-						$db->sql_query($sql);
-						
-						$sql = 'DELETE FROM ' . DOC_COMMENTS_ATTACHMENTS_TABLE . ' WHERE comment_id = ' . $comment_id . ' AND attach_id = ' .$attach_id .' AND module = \'ug\'';
-						$db->sql_query($sql);
+						foreach($attach_array as $attach)
+						{
+							$sql = 'DELETE FROM ' . ATTACHMENTS_TABLE . ' WHERE attach_id = ' . $attach['attach_id'];
+							$db->sql_query($sql);
+							
+							$sql = 'DELETE FROM ' . DOC_COMMENTS_ATTACHMENTS_TABLE . ' WHERE comment_id = ' . $comment_id . ' AND attach_id = ' .$attac['attach_id'] .' AND module = \'ug\'';
+							$db->sql_query($sql);
+						}
 					}
 					
 					$sql = 'DELETE FROM ' . DOC_COMMENTS_TABLE . ' WHERE comment_id = ' . $comment_id;
@@ -531,21 +556,17 @@ else
 		$sql = 'SELECT a.* 
 			FROM '.	DOC_COMMENTS_ATTACHMENTS_TABLE.' d
 			INNER JOIN '.ATTACHMENTS_TABLE.' a ON d.attach_id=a.attach_id 
-			WHERE d.comment_id='. intval($comment_id).' and module=\'ug\'';
+			WHERE d.comment_id='. intval($comment_data['comment_id']).' and d.module=\'ug\'';
 		
 		$attachment_data = $db->sql_query($sql);
 		
-		if(count($attachment_data)>0)
+		while ($attach = $db->sql_fetchrow($attachment_data))
 		{
-			$attach = array();
-			while ($attach = $db->sql_fetchrow($attachment_data)))
-			{
-				$template->assign_block_vars('saved_attachment', array(
+			$template->assign_block_vars('comment.saved_attachment', array(
 						'ID' 	=> $attach['attach_id'],
 						'TITLE'	=> $attach['real_filename'],
-						'SIZE' 	=> $attach['filesize']
-				));
-			}
+						'SIZE' 	=> $attach['filesize'],
+			));
 		}
 	}
 
