@@ -27,6 +27,7 @@ require($path_to_docs_root . 'common.php');
 //
 define('ABS_PATH_TO_DOCS_KB', ABS_PATH_TO_DOCS . 'kb/');
 
+
 include($root_path . 'includes/support/docs/functions_knowldgebase.' . $phpEx);
 
 //

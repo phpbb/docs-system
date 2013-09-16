@@ -1,4 +1,6 @@
 <!-- INCLUDE support/docs/docs_header.html -->
+<div id="display_flash_block">
+
 <script>
 	$(function(){
 		$('#submit_btn').click(function(e)
@@ -14,9 +16,38 @@
 				}
 			);
 		});
+		
+		$('.delete').click(function(e)
+		{
+			e.preventDefault();
+			
+			if (confirm("Are you sure you wish to delete this comment?"))
+			{
+				$.post (
+					window.location.pathname,
+					{action:'delete',id:$(this).attr('id')},
+					function (data)
+					{
+						$('#display_flash_block').replaceWith(data);
+					}
+				);
+			}
+		});
+		
+		$('.edit').click(function(e)
+		{
+			e.preventDefault();
+			
+			$('#submit_btn').attr('value','Update');
+			$('#flash_form').find('input[name=id]').attr('id',$(this).attr('id'));
+			
+		});
+		
+		$('.show').click(function(e)
+		{
+		});
 	});
 </script>
-<div id="display_flash_block">
 
 <form method="post" id="flash_form" action="">
 	<fieldset>
@@ -59,17 +90,25 @@
 </form>
 
 <style type="text/css">
-ul{
-    margin: 0 auto;
-    padding: 0;
+.list_table{
+	background:#333;
+	width:800px;
 }
+.list_table td{
+	padding:3px;
+	background:#fff;
+}
+
 </style>
 
-<table >
+<div class="center">
+
+<h2>Flash List</h2>
+<table class="list_table">
 	<tr>
 		<td>Title</td>
 		<td>Name</td>
-		<td>Files</td>
+		<td>FLash</td>
 		<td>Version</td>
 		<td>Submitted By</td>
 		<td>Action</td>
@@ -78,15 +117,14 @@ ul{
 	<tr>
 		<td>{flash.TITLE}</td>
 		<td>{flash.UNIQUE_NAME}</td>
-		<td>{flash.PATH}</td>
-		<td>{flash.version}</td>
+		<td><a href="{flash.PATH}" class="button2 show">Click To Show</a></td>
+		<td>{flash.VERSION}</td>
 		<td>{flash.USER_NAME}</td>
-		<td><a href="" id="edit">Edit</a> <a href="" id="delete">Delete</a></td>
+		<td><a href="" id="{flash.ID}" class="button2 edit">Edit</a> <a href="" id="{flash.ID}" class="button2 delete">Delete</a></td>
 	</tr>
-	<!-- BEGIN flash -->
+	<!-- END flash -->
 </table>
 
-
+</div>
 </div>			
-<!-- INCLUDE support/docs/docs_footer.html -->
 <!-- INCLUDE support/docs/docs_footer.html -->

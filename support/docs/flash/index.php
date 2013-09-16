@@ -42,6 +42,8 @@ CREATE TABLE IF NOT EXISTS `docs_flash` (
   `version` varchar(24) NOT NULL,
   `article_id` mediumint(8),
   `user_id` mediumint(8) NOT NULL,
+  `like` int(10),
+  `dislike` int(10),
   PRIMARY KEY (`flash_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 */
@@ -93,11 +95,19 @@ if($_POST)
 				$sql_array = array(
 					'title'			=> $title,
 					'unique_name'	=> $unique_name,
-					'flash'			=> $flash,
-					'thumb'			=> $thumb,
 					'version'		=> $version,
 				);
+				
+				if(isset($flash)&&!empty($flash))
+				{
+					$sql_array['flash'] = $flash;
+				}
 
+				if(isset($thumb)&&!empty($thumb))
+				{
+					$sql_array['thumb'] = $thumb;
+				}				
+				
 				$sql = 'UPDATE ' . DOC_FLASH_TABLE . '
 					SET ' . $db->sql_build_array('UPDATE', $sql_array) . "
 					WHERE flash_id = '" . $id . "'";
