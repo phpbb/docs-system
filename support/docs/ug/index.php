@@ -250,7 +250,7 @@ else
 		switch($comment_action)
 		{
 			case 'add':
-				if ($user->data['user_id'] != ANONYMOUS)
+				if (DOCS_ADMIN && $user->data['user_id'] != ANONYMOUS)
 				{
 
 					// @TODO Check that the comments section is valid by always submitting requests to the full static path

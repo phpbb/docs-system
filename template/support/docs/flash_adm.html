@@ -1,4 +1,22 @@
 <!-- INCLUDE support/docs/docs_header.html -->
+<script>
+	$(function(){
+		$('#submit_btn').click(function(e)
+		{
+			e.preventDefault();
+			//do validation
+			$.post (
+				window.location.pathname,
+				$('flash_form').serialize(),
+				function (data)
+				{
+					$('#display_flash_block').replaceWith(data);
+				}
+			);
+		});
+	});
+</script>
+<div id="display_flash_block">
 
 <form method="post" id="flash_form" action="">
 	<fieldset>
@@ -11,7 +29,7 @@
 		<dl>
 			<dt><label for="name">Name: </label></dt>
 			<dd>
-				<input type="text" name="name" value="" class="inputbox autowidth" />
+				<input type="text" name="unique_name" value="" class="inputbox autowidth" />
 			</dd>
 		</dl>
 		<dl>
@@ -29,37 +47,46 @@
 		<dl>
 			<dt><label for="name">Version: </label></dt>
 			<dd>
-				<input type="text" name="version" value="" class="inputbox autowidth" />
+				<input type="text" name="flash_version" value="" class="inputbox autowidth" />
 			</dd>
 		</dl>
 	</fieldset>
 	<fieldset>
+		<input type="hidden" name="id" value="" />
 		<input type="reset" name="reset" value="Reset" class="button2" />
-		<input type="submit" name="submit" value="Submit" class="button1" />
+		<input type="button" name="submit" value="Submit" class="button1" id="submit_btn" />
 	</fieldset>
 </form>
 
+<style type="text/css">
+ul{
+    margin: 0 auto;
+    padding: 0;
+}
+</style>
+
+<table >
+	<tr>
+		<td>Title</td>
+		<td>Name</td>
+		<td>Files</td>
+		<td>Version</td>
+		<td>Submitted By</td>
+		<td>Action</td>
+	</tr>
+	<!-- BEGIN flash -->
+	<tr>
+		<td>{flash.TITLE}</td>
+		<td>{flash.UNIQUE_NAME}</td>
+		<td>{flash.PATH}</td>
+		<td>{flash.version}</td>
+		<td>{flash.USER_NAME}</td>
+		<td><a href="" id="edit">Edit</a> <a href="" id="delete">Delete</a></td>
+	</tr>
+	<!-- BEGIN flash -->
+</table>
 
 
-
-							</div>
-						</div>
-
-						<span class="corners-bottom grey"><span></span></span>
-					</div>
-				</div>
-
-				<div class="forumbg">
-					<div class="inner">
-					
-					<ul class="topiclist kb-index">
-								<li class="header">
-									<dl>
-										<dt class="article-column" style="font-size: 10px; text-align: center;">Name</dt>
-										<dd class="author-column" style="font-size: 10px; text-align: center;">Title</dd>
-										<dd class="author-column" style="font-size: 10px; text-align: center;">Version</dd>
-										<dd class="author-column" style="text-align: center;">Acitions</dd>
-									</dl>
-								</li>
-							</ul>
+</div>			
+<!-- INCLUDE support/docs/docs_footer.html -->
 <!-- INCLUDE support/docs/docs_footer.html -->

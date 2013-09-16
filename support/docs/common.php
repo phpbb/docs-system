@@ -36,6 +36,9 @@ define('DOC_COMMENTS_TABLE', 'docs_comments');
 // Table to to store attachment id for ug/kib/etc
 define('DOC_COMMENTS_ATTACHMENTS_TABLE', 'docs_comments_attachments');
 
+// Table to to store flash
+define('DOC_FLASH_TABLE', 'docs_flash');
+
 // Domain name for posted links
 // No trailing slashes
 define('SITE_URL', generate_board_url(true));

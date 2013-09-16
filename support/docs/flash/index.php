@@ -31,6 +31,120 @@ $tutorials_3 = array(
 	array('title' => 'Word censor',				'name' => '3.0_word_censor'),
 );
 
+/* Database structure */
+/*
+CREATE TABLE IF NOT EXISTS `docs_flash` (
+  `flash_id` int(10) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `unique_name` varchar(255) NOT NULL,
+  `flash` varchar(255) NOT NULL,
+  `thumb` varchar(255) NOT NULL,
+  `version` varchar(24) NOT NULL,
+  `article_id` mediumint(8),
+  `user_id` mediumint(8) NOT NULL,
+  PRIMARY KEY (`flash_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+*/
+
+// Inserting flash post
+
+if($_POST)
+{
+	$action = request_var('action', '');
+	
+	$submission = ($action=="add"||$action=="update")? true: false;
+	
+	if($submission)
+	{
+		$title = request_var('title', '');
+		$name = request_var('name', '');
+		$flash = request_var('flash', '');
+		$thumbnail = request_var('thumbnail', '');
+		$flash_version = request_var('flash_version', '');	
+	}
+	
+	switch($action)
+	{
+		case 'add':
+			if (DOCS_ADMIN && $user->data['user_id'] != ANONYMOUS)
+			{
+				$sql_array = array(
+							'title'			=> $title,
+							'unique_name'	=> $unique_name,
+							'flash'			=> $flash,
+							'thumb'			=> $thumb,
+							'version'		=> $version,
+							'user_id'		=> $user->data['user_id'],
+						);
+								
+				$sql = 'INSERT INTO ' . DOC_FLASH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_array);
+				$db->sql_query($sql);
+			}
+			else
+			{
+				ug_report_error('You are not authorized to access this feature.', $is_ajax_request);
+			}
+		break;
+		case 'edit':
+			if (DOCS_ADMIN && $user->data['user_id'] != ANONYMOUS)
+			{
+				$id = intval(request_var('id',''));
+				
+				$sql_array = array(
+					'title'			=> $title,
+					'unique_name'	=> $unique_name,
+					'flash'			=> $flash,
+					'thumb'			=> $thumb,
+					'version'		=> $version,
+				);
+
+				$sql = 'UPDATE ' . DOC_FLASH_TABLE . '
+					SET ' . $db->sql_build_array('UPDATE', $sql_array) . "
+					WHERE flash_id = '" . $id . "'";
+				$db->sql_query($sql);
+			}
+			else
+			{
+				ug_report_error('You are not authorized to access this feature.', $is_ajax_request);
+			}
+		break;
+		case 'delete':
+			if (DOCS_ADMIN && $user->data['user_id'] != ANONYMOUS)
+			{
+				$id = intval(request_var('id',''));
+					
+				$sql = 'DELETE FROM ' . DOC_FLASH_TABLE . ' WHERE comment_id = ' . $comment_id;
+				$db->sql_query($sql);
+			}
+			else
+			{
+				ug_report_error('You are not authorized to access this feature.', $is_ajax_request);
+			}
+		break;
+	}
+}
+
+// Retrieving flash records
+$sql = 'SELECT f.*,u.username 
+		FROM '.	DOC_FLASH_TABLE.' f
+		INNER JOIN '.USERS_TABLE.' u ON f.user_id=u.user_id ';
+		
+$flash_data = $db->sql_query($sql);
+		
+while ($flash = $db->sql_fetchrow($flash_data))
+{
+	$template->assign_block_vars('flash', array(
+				'TITLE' 	=> $flash['title'],
+				'UNIQUE_NAME'	=> $flash['unique_name'],
+				'PATH' 	=> $flash['flash'],
+				'THUMB'		=> $flash['thumb'],
+				'VERSION'	=> $flash['version'],
+				'USER_NAME' => $flash['username'],
+				'ID'		=> $flash['flash_id'],
+	));
+}	
+
+
 
 // Retrieve the version the user would like to see
 $version = request_var('version', '');
