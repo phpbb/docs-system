@@ -34,7 +34,6 @@ include($root_path . 'includes/support/docs/functions_flash.' . $phpEx);
 	define('FLASH_ADMIN', TRUE);
 
 	$tabs['manage'] = 'Manage Flash';
-	$tabs['add'] = 'Add/Edit Flash';
 
 //}
 
