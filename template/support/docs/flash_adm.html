@@ -1,19 +1,23 @@
+<!-- IF not S_AJAX_REQUEST -->
 <!-- INCLUDE support/docs/docs_header.html -->
+<!-- ENDIF -->
+
 <div id="display_flash_block" style="padding:5px;">
 
 <script>
 	$(function(){
-		$('#submit_btn').click(function(e)
+		$(document).delegate('input#submit_btn','click',function(e)
 		{
 			e.preventDefault();
 			//do validation
+
 			$.post (
 				window.location.pathname,
-				$('flash_form').serialize(),
+				$('#flash_form').serialize(),
 				function (data)
 				{
 					$.colorbox.close();
-					// $('#display_flash_block').replaceWith(data);
+					$('#display_flash_block').replaceWith(data);
 				}
 			);
 		});
@@ -41,7 +45,10 @@
 			
 			$('#submit_btn').attr('value','Update');
 			$('#flash_form').find('input[name=id]').attr('id',$(this).attr('id'));
+			$('#flash_form').find('input[name=id]').attr('value','edit');
 			
+			var form=$('#flash_form_container').html();
+			$.colorbox({html:form,width:'350px',height:'280px'});
 		});
 		
 		$('.show').click(function(e)
@@ -50,7 +57,7 @@
 		$('#add_btn').click(function(e)
 		{
 			var form=$('#flash_form_container').html();
-			$.colorbox({html:form,width:'350px',height:'260px'});
+			$.colorbox({html:form,width:'350px',height:'280px'});
 		});
 	});
 </script>
@@ -85,12 +92,15 @@
 		<dl>
 			<dt><label for="name">Version: </label></dt>
 			<dd>
-				<input type="text" name="flash_version" value="" class="inputbox autowidth" />
+				<select name="flash_version" style="float:left;margin:0 4px;">
+					<option value="3.0">3.0</option>
+				</select>
 			</dd>
 		</dl>
 	</fieldset>
 	<fieldset>
 		<input type="hidden" name="id" value="" />
+		<input type="hidden" name="action" value="add" />
 		<input type="reset" name="reset" value="Reset" class="button2" />
 		<input type="button" name="submit" value="Submit" class="button1" id="submit_btn" />
 	</fieldset>
@@ -135,5 +145,7 @@
 </table>
 
 
-</div>			
+</div>
+<!-- IF not S_AJAX_REQUEST -->		
 <!-- INCLUDE support/docs/docs_footer.html -->
+<!-- ENDIF -->

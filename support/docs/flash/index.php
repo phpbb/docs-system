@@ -59,7 +59,7 @@ if($_POST)
 	if($submission)
 	{
 		$title = request_var('title', '');
-		$name = request_var('name', '');
+		$unique_name = request_var('unique_name', '');
 		$flash = request_var('flash', '');
 		$thumbnail = request_var('thumbnail', '');
 		$flash_version = request_var('flash_version', '');	
@@ -74,13 +74,17 @@ if($_POST)
 							'title'			=> $title,
 							'unique_name'	=> $unique_name,
 							'flash'			=> $flash,
-							'thumb'			=> $thumb,
-							'version'		=> $version,
+							'thumb'			=> $thumbnail,
+							'version'		=> $flash_version,
 							'user_id'		=> $user->data['user_id'],
 						);
 								
 				$sql = 'INSERT INTO ' . DOC_FLASH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_array);
+
 				$db->sql_query($sql);
+				$template->assign_vars(array(
+					'S_AJAX_REQUEST'=>true,
+				));
 			}
 			else
 			{
@@ -112,6 +116,9 @@ if($_POST)
 					SET ' . $db->sql_build_array('UPDATE', $sql_array) . "
 					WHERE flash_id = '" . $id . "'";
 				$db->sql_query($sql);
+				$template->assign_vars(array(
+					'S_AJAX_REQUEST'=>true,
+				));
 			}
 			else
 			{
