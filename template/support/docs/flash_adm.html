@@ -11,7 +11,8 @@
 			e.preventDefault();
 			//do validation
 
-			$.post (
+			$.post
+			(
 				window.location.pathname,
 				$('#flash_form').serialize(),
 				function (data)
@@ -28,7 +29,8 @@
 			
 			if (confirm("Are you sure you wish to delete this flash?"))
 			{
-				$.post (
+				$.post
+				(
 					window.location.pathname,
 					{action:'delete',id:$(this).attr('id')},
 					function (data)
@@ -47,6 +49,16 @@
 			$('#flash_form').find('input[name=id]').attr('id',$(this).attr('id'));
 			$('#flash_form').find('input[name=id]').attr('value','edit');
 			
+			$.post
+			(
+				window.location.pathname,
+				{action:'update',id:$(this).attr('id')},
+				function (data)
+				{
+					$('#flash_form_container').replaceWith(data);
+				}
+			);
+			
 			var form=$('#flash_form_container').html();
 			$.colorbox({html:form,width:'350px',height:'280px'});
 		});
@@ -63,48 +75,7 @@
 </script>
 
 <div id="flash_form_container" style="display:none;">
-<form method="post" id="flash_form" action="" style="background:#fff;padding:10px;">
-	<fieldset>
-		<dl>
-			<dt><label for="fileupload">Title: </label></dt>
-			<dd>
-				<input type="text" name="title" value="" class="inputbox autowidth" />
-			</dd>
-		</dl>
-		<dl>
-			<dt><label for="name">Name: </label></dt>
-			<dd>
-				<input type="text" name="unique_name" value="" class="inputbox autowidth" />
-			</dd>
-		</dl>
-		<dl>
-			<dt><label for="name">Flash: </label></dt>
-			<dd>
-				<input type="text" name="flash" value="" class="inputbox autowidth" />
-			</dd>
-		</dl>
-		<dl>
-			<dt><label for="name">Thumbnail: </label></dt>
-			<dd>
-				<input type="text" name="thumbnail" value="" class="inputbox autowidth" />
-			</dd>
-		</dl>
-		<dl>
-			<dt><label for="name">Version: </label></dt>
-			<dd>
-				<select name="flash_version" style="float:left;margin:0 4px;">
-					<option value="3.0">3.0</option>
-				</select>
-			</dd>
-		</dl>
-	</fieldset>
-	<fieldset>
-		<input type="hidden" name="id" value="" />
-		<input type="hidden" name="action" value="add" />
-		<input type="reset" name="reset" value="Reset" class="button2" />
-		<input type="button" name="submit" value="Submit" class="button1" id="submit_btn" />
-	</fieldset>
-</form>
+<!-- INCLUDE support/docs/flash_submission.html -->
 </div>
 
 <style type="text/css">

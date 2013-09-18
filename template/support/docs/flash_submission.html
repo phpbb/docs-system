@@ -1,0 +1,44 @@
+<!-- BEGIN flash_data -->
+<form method="post" id="flash_form" action="" style="background:#fff;padding:10px;">
+	<fieldset>
+		<dl>
+			<dt><label for="fileupload">Title: </label></dt>
+			<dd>
+				<input type="text" name="title" value="{flash_data.TITLE}" class="inputbox autowidth" />
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="name">Name: </label></dt>
+			<dd>
+				<input type="text" name="unique_name" value="{flash_data.UNIQUE_NAME}" class="inputbox autowidth" />
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="name">Flash: </label></dt>
+			<dd>
+				<input type="text" name="flash" value="{flash_data.PATH}" class="inputbox autowidth" />
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="name">Thumbnail: </label></dt>
+			<dd>
+				<input type="text" name="thumbnail" value="{flash_data.THUMB}" class="inputbox autowidth" />
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="name">Version: </label></dt>
+			<dd>
+				<select name="flash_version" style="float:left;margin:0 4px;">
+					<option value="3.0">3.0</option>
+				</select>
+			</dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<input type="hidden" name="id" value="" />
+		<input type="hidden" name="action" value="add" />
+		<input type="reset" name="reset" value="Reset" class="button2" />
+		<input type="button" name="submit" value="Submit" class="button1" id="submit_btn" />
+	</fieldset>
+</form>
+<!-- END flash_data -->

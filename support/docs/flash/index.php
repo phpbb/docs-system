@@ -138,6 +138,33 @@ if($_POST)
 				ug_report_error('You are not authorized to access this feature.', $is_ajax_request);
 			}
 		break;
+		case 'fetch':
+			if (DOCS_ADMIN && $user->data['user_id'] != ANONYMOUS)
+			{
+				$id = intval(request_var('id',''));
+					
+				$sql = 'SELECT *
+						FROM '.	DOC_FLASH_TABLE.' flash_id=$id ';
+						
+				$flash_data = $db->sql_query($sql);
+						
+				while ($flash = $db->sql_fetchrow($flash_data))
+				{
+					$template->assign_block_vars('flash_data', array(
+								'TITLE' 	=> $flash['title'],
+								'UNIQUE_NAME'	=> $flash['unique_name'],
+								'PATH' 	=> $flash['flash'],
+								'THUMB'		=> $flash['thumb'],
+								'VERSION'	=> $flash['version'],
+								'USER_NAME' => $flash['username'],
+								'ID'		=> $flash['flash_id'],
+					));
+				}
+				$template->set_filenames(array(
+					'body' => DOCS_TEMPLATE_PATH . 'flash_submission.html')
+				);
+			}
+		break;
 	}
 }
 
