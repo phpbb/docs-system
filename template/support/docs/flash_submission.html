@@ -1,28 +1,28 @@
-<!-- BEGIN flash_data -->
-<form method="post" id="flash_form" action="" style="background:#fff;padding:10px;">
+<div style="display:none;">
+<form method="post" id="flash_form" name="flash_form" action="" style="background:#fff;padding:10px;">
 	<fieldset>
 		<dl>
 			<dt><label for="fileupload">Title: </label></dt>
 			<dd>
-				<input type="text" name="title" value="{flash_data.TITLE}" class="inputbox autowidth" />
+				<input type="text" name="title" id="title" value="" class="inputbox autowidth" />
 			</dd>
 		</dl>
 		<dl>
 			<dt><label for="name">Name: </label></dt>
 			<dd>
-				<input type="text" name="unique_name" value="{flash_data.UNIQUE_NAME}" class="inputbox autowidth" />
+				<input type="text" name="unique_name" id="unique_name" value="" class="inputbox autowidth" />
 			</dd>
 		</dl>
 		<dl>
 			<dt><label for="name">Flash: </label></dt>
 			<dd>
-				<input type="text" name="flash" value="{flash_data.PATH}" class="inputbox autowidth" />
+				<input type="text" name="flash" id="flash" value="" class="inputbox autowidth" />
 			</dd>
 		</dl>
 		<dl>
 			<dt><label for="name">Thumbnail: </label></dt>
 			<dd>
-				<input type="text" name="thumbnail" value="{flash_data.THUMB}" class="inputbox autowidth" />
+				<input type="text" name="thumbnail" id="thumbnail" value="" class="inputbox autowidth" />
 			</dd>
 		</dl>
 		<dl>
@@ -38,7 +38,7 @@
 		<input type="hidden" name="id" value="" />
 		<input type="hidden" name="action" value="add" />
 		<input type="reset" name="reset" value="Reset" class="button2" />
-		<input type="button" name="submit" value="Submit" class="button1" id="submit_btn" />
+		<input type="submit" name="submit" value="Submit" class="button1" id="submit_btn" />
 	</fieldset>
 </form>
-<!-- END flash_data -->
+</div>

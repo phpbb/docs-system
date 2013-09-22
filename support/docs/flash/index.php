@@ -54,7 +54,7 @@ if($_POST)
 {
 	$action = request_var('action', '');
 	
-	$submission = ($action=="add"||$action=="update")? true: false;
+	$submission = ($action=="add"||$action=="edit")? true: false;
 	
 	if($submission)
 	{
@@ -94,12 +94,12 @@ if($_POST)
 		case 'edit':
 			if (DOCS_ADMIN && $user->data['user_id'] != ANONYMOUS)
 			{
-				$id = intval(request_var('id',''));
+				$id = request_var('id',0);
 				
 				$sql_array = array(
 					'title'			=> $title,
 					'unique_name'	=> $unique_name,
-					'version'		=> $version,
+					'version'		=> $flash_version,
 				);
 				
 				if(isset($flash)&&!empty($flash))
@@ -107,9 +107,9 @@ if($_POST)
 					$sql_array['flash'] = $flash;
 				}
 
-				if(isset($thumb)&&!empty($thumb))
+				if(isset($thumbnail)&&!empty($thumbnail))
 				{
-					$sql_array['thumb'] = $thumb;
+					$sql_array['thumb'] = $thumbnail;
 				}				
 				
 				$sql = 'UPDATE ' . DOC_FLASH_TABLE . '
@@ -130,8 +130,11 @@ if($_POST)
 			{
 				$id = intval(request_var('id',''));
 					
-				$sql = 'DELETE FROM ' . DOC_FLASH_TABLE . ' WHERE comment_id = ' . $comment_id;
+				$sql = 'DELETE FROM ' . DOC_FLASH_TABLE . ' WHERE flash_id = ' . $id;
 				$db->sql_query($sql);
+				$template->assign_vars(array(
+					'S_AJAX_REQUEST'=>true,
+				));
 			}
 			else
 			{
@@ -144,25 +147,14 @@ if($_POST)
 				$id = intval(request_var('id',''));
 					
 				$sql = 'SELECT *
-						FROM '.	DOC_FLASH_TABLE.' flash_id=$id ';
-						
+						FROM '.	DOC_FLASH_TABLE.' WHERE flash_id='. $id;
+				
 				$flash_data = $db->sql_query($sql);
-						
-				while ($flash = $db->sql_fetchrow($flash_data))
-				{
-					$template->assign_block_vars('flash_data', array(
-								'TITLE' 	=> $flash['title'],
-								'UNIQUE_NAME'	=> $flash['unique_name'],
-								'PATH' 	=> $flash['flash'],
-								'THUMB'		=> $flash['thumb'],
-								'VERSION'	=> $flash['version'],
-								'USER_NAME' => $flash['username'],
-								'ID'		=> $flash['flash_id'],
-					));
-				}
-				$template->set_filenames(array(
-					'body' => DOCS_TEMPLATE_PATH . 'flash_submission.html')
-				);
+				
+				$flash = $db->sql_fetchrow($flash_data);
+				
+				echo json_encode($flash);
+				exit;
 			}
 		break;
 	}
@@ -174,6 +166,8 @@ $sql = 'SELECT f.*,u.username
 		INNER JOIN '.USERS_TABLE.' u ON f.user_id=u.user_id ';
 		
 $flash_data = $db->sql_query($sql);
+
+$tutorials=array();
 		
 while ($flash = $db->sql_fetchrow($flash_data))
 {
@@ -186,8 +180,11 @@ while ($flash = $db->sql_fetchrow($flash_data))
 				'USER_NAME' => $flash['username'],
 				'ID'		=> $flash['flash_id'],
 	));
+	
+	$tutorials[]=$flash;
 }	
 
+$template->assign_block_Vars('flash_data', array());
 
 
 // Retrieve the version the user would like to see
@@ -226,15 +223,6 @@ else/* if (!empty($version))*/
 	$template->set_filenames(array(
 		'body' => DOCS_TEMPLATE_PATH . 'flash_body.html')
 	);
-
-	foreach ($tutorials as $tutorial_id => $tutorial_data)
-	{
-		$template->assign_block_vars('tutorials', array(
-			'U_TUTORIAL'	=> append_sid($base_path . 'support/docs/flash/' . $version . '/index.' . $phpEx, 'tid=' . $tutorial_id),
-			'V_NAME'		=> $tutorial_data['name'],
-			'V_TITLE'		=> $tutorial_data['title'])
-		);
-	}
 }
 
 $template->assign_vars(array(

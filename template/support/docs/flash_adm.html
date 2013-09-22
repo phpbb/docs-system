@@ -5,16 +5,24 @@
 <div id="display_flash_block" style="padding:5px;">
 
 <script>
+	function show_flash(flash_name)
+	{
+		$.colorbox({href:window.location.pathname+'/../../show/'+flash_name});
+	}
+	
+	
 	$(function(){
-		$(document).delegate('input#submit_btn','click',function(e)
+		
+		
+		$('#flash_form').submit(function(e)
 		{
 			e.preventDefault();
 			//do validation
-
+			
 			$.post
 			(
 				window.location.pathname,
-				$('#flash_form').serialize(),
+				$(this).serialize(),
 				function (data)
 				{
 					$.colorbox.close();
@@ -46,37 +54,57 @@
 			e.preventDefault();
 			
 			$('#submit_btn').attr('value','Update');
-			$('#flash_form').find('input[name=id]').attr('id',$(this).attr('id'));
-			$('#flash_form').find('input[name=id]').attr('value','edit');
+			$('#flash_form').find('input[name=id]').attr('value',$(this).attr('id'));
+			$('#flash_form').find('input[name=action]').attr('value','edit');
 			
-			$.post
-			(
-				window.location.pathname,
-				{action:'update',id:$(this).attr('id')},
-				function (data)
+			$.ajax
+			({
+				type: 'post',
+				url: window.location.pathname,
+				data: {action:'fetch',id:$(this).attr('id')},
+				dataType: 'json',
+				success: function (data)
 				{
-					$('#flash_form_container').replaceWith(data);
-				}
-			);
-			
-			var form=$('#flash_form_container').html();
-			$.colorbox({html:form,width:'350px',height:'280px'});
+					if(data!=null)
+					{
+						$('#flash_form').find('input[name=title]').attr('value',data.title);
+						$('#flash_form').find('input[name=unique_name]').attr('value',data.unique_name);
+						$('#flash_form').find('input[name=flash]').attr('value',data.flash);
+						$('#flash_form').find('input[name=thumbnail]').attr('value',data.thumb);
+						
+						$.colorbox({
+							inline:true,
+							href:"#flash_form",
+							width:'350px',
+							height:'280px',
+						});
+					}
+					
+				},
+			});
 		});
-		
-		$('.show').click(function(e)
-		{
-		});
+
 		$('#add_btn').click(function(e)
 		{
-			var form=$('#flash_form_container').html();
-			$.colorbox({html:form,width:'350px',height:'280px'});
+			e.preventDefault();
+			
+			$('#flash_form').find('input[name=title]').attr('value','');
+			$('#flash_form').find('input[name=unique_name]').attr('value','');
+			$('#flash_form').find('input[name=flash]').attr('value','');
+			$('#flash_form').find('input[name=thumbnail]').attr('value','');
+		
+			$.colorbox({
+				inline:true,
+				href:"#flash_form",
+				width:'350px',
+				height:'280px',
+			});
 		});
 	});
+
 </script>
 
-<div id="flash_form_container" style="display:none;">
 <!-- INCLUDE support/docs/flash_submission.html -->
-</div>
 
 <style type="text/css">
 .list_table{
@@ -107,7 +135,7 @@
 	<tr>
 		<td>{flash.TITLE}</td>
 		<td>{flash.UNIQUE_NAME}</td>
-		<td><a href="{flash.PATH}" class="button2 show">Click To Show</a></td>
+		<td><a href="" class="button2" onclick='show_flash("{flash.PATH}");return false;'>Preview</a></td>
 		<td>{flash.VERSION}</td>
 		<td>{flash.USER_NAME}</td>
 		<td><a href="" id="{flash.ID}" class="button2 edit">Edit</a> <a href="" id="{flash.ID}" class="button2 delete">Delete</a></td>
