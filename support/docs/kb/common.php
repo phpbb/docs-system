@@ -170,3 +170,6 @@ $template->assign_vars(array(
 	'S_IN_KB'				=> true,
 	'S_BODY_CLASS'			=> 'support_docs kb support',
 ));
+
+
+define('ABS_PATH_TO_DOCS_KB', ABS_PATH_TO_DOCS . 'kb/');

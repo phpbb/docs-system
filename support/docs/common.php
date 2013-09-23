@@ -22,10 +22,10 @@ include($phpbb_root_path . 'includes/functions_upload.php');
 define('DOCS_TEMPLATE_PATH', 'support/docs/');
 
 // Which language shall we display?
-define('DOCS_LANG', request_var('lang', ''));
+define('DOCS_LANG', request_var('lang', 'en'));
 
 // Which version of phpBB?
-define('DOCS_VERSION', request_var('version', ''));
+define('DOCS_VERSION', request_var('version', '3.0'));
 
 // @TODO Everything should use this
 define('ABS_PATH_TO_DOCS', $base_path . 'support/docs/' . DOCS_LANG . '/' . DOCS_VERSION . '/');
