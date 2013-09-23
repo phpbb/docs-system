@@ -5,9 +5,9 @@
 <div id="display_flash_block" style="padding:5px;">
 
 <script>
-	function show_flash(flash_name)
+	function show_flash(flash_id)
 	{
-		$.colorbox({href:window.location.pathname+'/../../show/'+flash_name});
+		$.colorbox({href:window.location.pathname+'/../../show/'+flash_id});
 	}
 	
 	
@@ -135,7 +135,7 @@
 	<tr>
 		<td>{flash.TITLE}</td>
 		<td>{flash.UNIQUE_NAME}</td>
-		<td><a href="" class="button2" onclick='show_flash("{flash.PATH}");return false;'>Preview</a></td>
+		<td><a href="" class="button2" onclick='show_flash({flash.ID});return false;'>Preview</a></td>
 		<td>{flash.VERSION}</td>
 		<td>{flash.USER_NAME}</td>
 		<td><a href="" id="{flash.ID}" class="button2 edit">Edit</a> <a href="" id="{flash.ID}" class="button2 delete">Delete</a></td>

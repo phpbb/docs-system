@@ -14,39 +14,7 @@ define('IN_PHPBB', true);
 require('./common.php');
 
 // Define the 3.0 flash tutorials
-// dumping this into a database
-
-$tutorials_3 = array(
-	array('title' => 'Add a moderator',			'name' => '3.0_add_moderator'),
-	array('title' => 'Manage attachments',		'name' => '3.0_attachments'),
-	array('title' => 'Backup and restore',		'name' => '3.0_backup'),
-	array('title' => 'Add custom BBCodes',		'name' => '3.0_bbcode'),
-	array('title' => 'Custom usergroups',		'name' => '3.0_custom_groups'),
-	array('title' => 'Custom profile fields',	'name' => '3.0_fields'),
-	array('title' => 'Managing forums', 		'name' => '3.0_forums'),
-	array('title' => 'Mass email',				'name' => '3.0_mass_email'),
-	array('title' => 'Managing ranks',			'name' => '3.0_ranks'),
-	array('title' => 'Report reasons',			'name' => '3.0_report_reasons'),
-	array('title' => 'User security',			'name' => '3.0_user_security'),
-	array('title' => 'Word censor',				'name' => '3.0_word_censor'),
-);
-
-/* Database structure */
-/*
-CREATE TABLE IF NOT EXISTS `docs_flash` (
-  `flash_id` int(10) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `unique_name` varchar(255) NOT NULL,
-  `flash` varchar(255) NOT NULL,
-  `thumb` varchar(255) NOT NULL,
-  `version` varchar(24) NOT NULL,
-  `article_id` mediumint(8),
-  `user_id` mediumint(8) NOT NULL,
-  `like` int(10),
-  `dislike` int(10),
-  PRIMARY KEY (`flash_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-*/
+// please dump docs_flash.sql into database first
 
 // Inserting flash post
 
@@ -181,7 +149,7 @@ while ($flash = $db->sql_fetchrow($flash_data))
 				'ID'		=> $flash['flash_id'],
 	));
 	
-	$tutorials[]=$flash;
+	$tutorials[$flash['flash_id']]=$flash;
 }	
 
 $template->assign_block_Vars('flash_data', array());
@@ -190,7 +158,6 @@ $template->assign_block_Vars('flash_data', array());
 // Retrieve the version the user would like to see
 $version = request_var('version', '');
 $version = in_array($version, array('3.0')) ? $version : '3.0';
-$tutorials = ($version == '3.0') ? $tutorials_3 : /*$tutorials_3_2*/'';
 
 $template->assign_var('V_VERSION', $version);
 
@@ -213,7 +180,7 @@ else if (!empty($version) && $tutorial_id >= 0 && isset($tutorials[$tutorial_id]
 	);
 	
 	$template->assign_vars(array(
-		'V_NAME'	=> $tutorials[$tutorial_id]['name'],
+		'V_NAME'	=> $tutorials[$tutorial_id]['flash'],
 		'V_TITLE'	=> $tutorials[$tutorial_id]['title'])
 	);
 }
