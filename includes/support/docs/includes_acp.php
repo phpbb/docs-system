@@ -48,7 +48,7 @@ switch ($mode)
 	break;
 
 	case 'topic':
-		redirect($phpbb_root_path . 'viewtopic.php?t=' . $row['topic_id']);
+		redirect(BOARD_URL . '/viewtopic.php?t=' . $row['topic_id']);
 	break;
 }
 
