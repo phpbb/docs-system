@@ -22,22 +22,16 @@ include($phpbb_root_path . 'includes/functions_upload.php');
 define('DOCS_TEMPLATE_PATH', 'support/docs/');
 
 // Which language shall we display?
-define('DOCS_LANG', request_var('lang', 'en'));
+define('DOCS_LANG', request_var('lang', ''));
 
 // Which version of phpBB?
-define('DOCS_VERSION', request_var('version', '3.0'));
+define('DOCS_VERSION', request_var('version', ''));
 
 // @TODO Everything should use this
 define('ABS_PATH_TO_DOCS', $base_path . 'support/docs/' . DOCS_LANG . '/' . DOCS_VERSION . '/');
 
 // Table to associate docs/kb/etc comments to a topic id
 define('DOC_COMMENTS_TABLE', 'docs_comments');
-
-// Table to to store attachment id for ug/kib/etc
-define('DOC_COMMENTS_ATTACHMENTS_TABLE', 'docs_comments_attachments');
-
-// Table to to store flash
-define('DOC_FLASH_TABLE', 'docs_flash');
 
 // Domain name for posted links
 // No trailing slashes
@@ -53,17 +47,17 @@ if ($auth->acl_get('s_kb_add'))
 
 	if ($auth->acl_get('s_kb_approve'))
 	{
-		//remove comment after testdefine('DOCS_ADMIN', TRUE);
+		define('DOCS_ADMIN', TRUE);
 	}
 	else
 	{
-		//remove comment after testdefine('DOCS_ADMIN', FALSE);
+		define('DOCS_ADMIN', FALSE);
 	}
 }
 else
 {
 	define('DOCS_USER', FALSE);
-	//remove comment after test define('DOCS_ADMIN', FALSE);
+	define('DOCS_ADMIN', FALSE);
 }
 
 // Login/Logout Data
@@ -91,6 +85,3 @@ $template->assign_vars(array(
 
 // @TODO Figure out why this is necessary
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
-
-
-

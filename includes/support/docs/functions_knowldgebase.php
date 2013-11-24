@@ -11,6 +11,7 @@ if (!defined('IN_PHPBB'))
 {
 	exit;
 }
+
 /**
  * Generates the tabs and calls the header/footer
  *
@@ -45,7 +46,6 @@ function process_page($page_title, $active_tab)
 	page_header('Knowledge Base > ' . $page_title, false);
 	page_footer(false);
 }
-
 
 /**
  * Displays a message and kills the page

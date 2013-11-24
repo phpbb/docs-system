@@ -23,33 +23,15 @@ $path_to_docs_root = '../';
 require($path_to_docs_root . 'common.php');
 
 //
-// Absolute path to Flash
+// Absolute path to UG
 //
 define('ABS_PATH_TO_DOCS_FLASH', ABS_PATH_TO_DOCS . 'flash/');
-include($root_path . 'includes/support/docs/functions_flash.' . $phpEx);
-
-// @Todo add in flash administrator option
-//if ($auth->acl_get('s_flash_add'))
-//{
-	define('FLASH_ADMIN', TRUE);
-
-	$tabs['manage'] = 'Manage Flash';
-
-//}
-
-//
-// Absolute path to Flash
-//
-
-
-
 
 //
 // Common UG template vars
 //
 $template->assign_vars(array(
 	'S_IN_DOCS_FLASH'			=> true,
-	'S_LISTING' => false,
-	'S_BODY_CLASS'				=> 'support_docs flash support tutorials',
+	'S_BODY_CLASS'				=> 'support tutorials',
 	'S_ABS_PATH_TO_DOCS_FLASH'	=> ABS_PATH_TO_DOCS_FLASH,
 ));
