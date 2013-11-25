@@ -8,9 +8,10 @@ var text_name = 'comment_text';
 
 function add_comment_submit(tab, section)
 {
+	/*
 	alert(tab + '.....' + section);
 	
-	var a = "https://www.phpbb.local/support/docs/en/3.0/ug/?mode=add" + "&version=3.1&lang=en&selected_tab=" + tab + "&selected_sec=" + section + "&comment_text=" + jQuery("#comment_text").val();
+	var a = "https://www.phpbb.local/support/docs/en/3.0/ug/?comment_action=add" + "&version=3.1&lang=en&selected_tab=" + tab + "&selected_sec=" + section + "&comment_text=" + $("#comment_text").val();
 	
 	alert(a);
 
@@ -18,23 +19,25 @@ function add_comment_submit(tab, section)
 	{
 		$('#display_comments_block').replaceWith(data);
 	});
-	 
+	
 	 e.preventDefault();
 	 return false;
-
-	/*jQuery.ajax({
+	*/
+	$.ajax({
 		type: "POST",
-		url: "index.php",
-		data: "mode=add" + "&version=3.1&lang=en&selected_tab=" + tab + "&selected_sec=" + section + "&comment_text=" + jQuery("#comment_text").val(),
+		url: window.location.pathname,
+		dataType: "html",
+		data: "comment_action=add" + "&version=3.0&lang=en&selected_tab=" + tab + "&selected_sec=" + section + "&comment_text=" + $("#comment_text").val(),
 		success: function(html)
 		{
-			alert(html);
+			//alert(html);
 			// Reload the comments
-			$('#display_comments_block').replaceWith(html);
+			var htmlCommentsBlock = $(html).find("#display_comments_block");
+			$('#display_comments_block').replaceWith(htmlCommentsBlock);
 
 			//$('#qr_editor_div').css("display","none");
 		}
-	});*/
+	});
 }
 
 function comment_inline_edit(commentID)
@@ -49,7 +52,7 @@ function comment_edit(commentID)
 	jQuery.ajax({
 		type: "POST",
 		url: "index.php",
-		data: "mode=edit" + "&comment-id=" + commentID + "&new_comment_text=" + jQuery("textarea#textarea-" + commentID + "").val(),
+		data: "comment_action=edit" + "&comment-id=" + commentID + "&new_comment_text=" + jQuery("textarea#textarea-" + commentID + "").val(),
 		success: function(html)
 		{
 			// Reload the comments
@@ -66,7 +69,7 @@ function comment_delete(commentID)
 		jQuery.ajax({
 			type: "POST",
 			url: "index.php",
-			data: "mode=delete" + "&comment_id=" + commentID,
+			data: "comment_action=delete" + "&comment_id=" + commentID,
 			success: function(html){
 				$('#display_comments_block').replaceWith(html);
 				return true;
@@ -83,7 +86,7 @@ function comment_approve(commentID)
 		jQuery.ajax({
 			type: "POST",
 			url: "index.php",
-			data: "mode=approve" + "&comment_id=" + commentID,
+			data: "comment_action=approve" + "&comment_id=" + commentID,
 			success: function(html){
 				$('#display_comments_block').replaceWith(html);
 				return true;
@@ -103,16 +106,18 @@ $(document).ready(function()
 		return false;
 	})
 
-	jQuery("a[id^='delete-']").live('click', function()
+	$(document).delegate("a[id^='delete-']", 'click',function(e)
 	{
-		var delID = jQuery(this).attr('id').split('-')[1];
+		e.preventDefault();
+		var delID = $(this).attr('id').split('-')[1];
 		comment_delete(delID);
 		return false;
 	})
 
-	jQuery("a[id^='approve-']").live('click', function()
+	$(document).delegate("a[id^='approve-']", 'click',function(e)
 	{
-		var appID = jQuery(this).attr('id').split('-')[1];
+		e.preventDefault();
+		var appID = $(this).attr('id').split('-')[1];
 		comment_approve(appID);
 		return false;
 	})
