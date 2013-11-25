@@ -106,7 +106,7 @@ $(document).ready(function()
 		return false;
 	})
 
-	$(document).delegate("a[id^='delete-']", 'click',function(e)
+	$(document).delegate("a[id^='delete-']", 'click', function(e)
 	{
 		e.preventDefault();
 		var delID = $(this).attr('id').split('-')[1];
@@ -114,7 +114,7 @@ $(document).ready(function()
 		return false;
 	})
 
-	$(document).delegate("a[id^='approve-']", 'click',function(e)
+	$(document).delegate("a[id^='approve-']", 'click', function(e)
 	{
 		e.preventDefault();
 		var appID = $(this).attr('id').split('-')[1];
