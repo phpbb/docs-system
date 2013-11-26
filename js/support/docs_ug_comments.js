@@ -51,12 +51,13 @@ function comment_edit(commentID)
 {
 	jQuery.ajax({
 		type: "POST",
-		url: "index.php",
+		url: window.location.pathname,
 		data: "comment_action=edit" + "&comment-id=" + commentID + "&new_comment_text=" + jQuery("textarea#textarea-" + commentID + "").val(),
 		success: function(html)
 		{
 			// Reload the comments
-			$('#display_comments_block').replaceWith(html);
+			var htmlCommentsBlock = $(html).find("#display_comments_block");
+			$('#display_comments_block').replaceWith(htmlCommentsBlock);
 		}
 	});
 }
@@ -68,10 +69,11 @@ function comment_delete(commentID)
 	{
 		jQuery.ajax({
 			type: "POST",
-			url: "index.php",
+			url: window.location.pathname,
 			data: "comment_action=delete" + "&comment_id=" + commentID,
 			success: function(html){
-				$('#display_comments_block').replaceWith(html);
+				var htmlCommentsBlock = $(html).find("#display_comments_block");
+				$('#display_comments_block').replaceWith(htmlCommentsBlock);
 				return true;
 			}
 		});
@@ -85,10 +87,11 @@ function comment_approve(commentID)
 	{
 		jQuery.ajax({
 			type: "POST",
-			url: "index.php",
+			url: window.location.pathname,
 			data: "comment_action=approve" + "&comment_id=" + commentID,
 			success: function(html){
-				$('#display_comments_block').replaceWith(html);
+				var htmlCommentsBlock = $(html).find("#display_comments_block");
+				$('#display_comments_block').replaceWith(htmlCommentsBlock);
 				return true;
 			}
 		})
