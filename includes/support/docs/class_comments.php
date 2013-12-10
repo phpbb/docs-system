@@ -172,7 +172,7 @@ class comments
 	// @TODO Finish paging, might want to just use a paginator class instead
 	function has_next()
 	{
-		if (count_pages() > $this->current_page && $this->current_page > 0)
+		if ($this->count_pages() > $this->current_page && $this->current_page > 0)
 		{
 			return true;
 		}
@@ -196,7 +196,7 @@ class comments
 
 	function count_pages()
 	{
-		return (count_comments() + $this->page_limit - 1) / $this->page_limit;
+		return ($this->count_comments() + $this->page_limit - 1) / $this->page_limit;
 	}
 
 	// @TODO See if can_edit_comment from functions_docs.php will be required in this class
