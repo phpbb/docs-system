@@ -29,15 +29,40 @@ class comments
 		$this->current_page = $current_page;
 	}
 
-	function print_comments()
+	function get_comments()
 	{
-		//use generate_text_for_display()
-		//use decode_message()
-		//use $template->assign_block_vars to display comments from template
+		// @TODO Potentially combine
+		if (!$this->is_admin)
+		{
+			$private_sql = " AND c.comment_private = 0";
+		}
+		else
+		{
+			$private_sql = "";
+		}
+
+		$sql_array = array
+		(
+			'SELECT' => '*',
+			'FROM' => array(
+				DOC_COMMENTS_TABLE => 'c',
+				USERS_TABLE => 'u',
+			),
+			'WHERE' => 'c.location_id = "' . $this->location_id .
+				'" AND u.user_id = c.user_id' .
+				$private_sql,
+			'ORDER_BY' => 'c.comment_timestamp ASC',
+		);
+
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$result = $this->db->sql_query($sql);
+
+		return $result;
 	}
 
 	function add_comment($comment_text, $bbcode_bitfield, $bbcode_uid, $bbcode_flags, $enable_bbcode, $enable_magic_url, $enable_smilies)
 	{
+		// @TODO catch and report errors
 		if ($comment_author->data['user_id'] != ANONYMOUS)
 		{
 			$comment_text = utf8_normalize_nfc($comment_text);
@@ -57,8 +82,8 @@ class comments
 				'bbcode_flags'		=> (int) $bbcode_flags,
 			);
 
-			$sql = 'INSERT INTO ' . DOC_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_array);
-			$db->sql_query($sql);
+			$sql = 'INSERT INTO ' . DOC_COMMENTS_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_array);
+			$this->db->sql_query($sql);
 		}
 	}
 
