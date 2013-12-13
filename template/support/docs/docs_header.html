@@ -24,6 +24,51 @@
 				// @TODO Why is this here?
 				$('#qr_showeditor_div').toggle();
 			});
+
+			// @TODO SIDs, figure out why qr_showeditor_div toggling is there. Test on other browsers.
+			$(function()
+			{
+				function update_content(anchor)
+				{
+					anchor = anchor.replace(window.location.origin, '').replace('{S_ABS_PATH_TO_DOCS_UG}','');
+					anchor = anchor.split('/');
+
+					var tab = anchor[0] ? anchor[0] : '';
+					var section = anchor[1] ? anchor[1] : '';
+
+					$.ajax({
+						type: 'POST',
+						dataType: 'html',
+						url: "{S_ABS_PATH_TO_DOCS_UG}",
+						data: 'selected_tab=' + tab + '&selected_sec=' + section,
+						success: function(data)
+						{
+							var html = $(data).find("#ajax");
+							$("#ajax").replaceWith(html);
+
+							$('#tabs a, .guide-menu a').click(function (e){
+								e.preventDefault();
+								history.pushState({ path: this.href }, null, this.href);
+								update_content(this.href);
+							});
+						}
+					});
+				}
+
+				$(window).bind('popstate', function (e) {
+					var state = e.originalEvent.state;
+					if (state) {
+						update_content(state.path);
+					}
+				});
+
+				$('#tabs a, .guide-menu a').click(function (e){
+					e.preventDefault();
+					history.pushState({ path: this.href }, null, this.href);
+					update_content(this.href);
+					
+				});
+			});
 			/*$(function()
 			{
 				function update_content(anchor)
@@ -124,3 +169,4 @@
 						<div class="main-content">
 							<div class="inner">
 								<span class="corners-top grey"><span></span></span>
+
