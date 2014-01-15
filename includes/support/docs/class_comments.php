@@ -17,7 +17,7 @@ class comments
 	private $page_limit;
 	private $current_page;
 
-	function __construct($db, $is_admin, $user, $location_id, $article_id, $comments_enabled, $page_limit, $current_page)
+	public function __construct($db, $is_admin, $user, $location_id, $article_id, $comments_enabled, $page_limit, $current_page)
 	{
 		$this->db = $db;
 		$this->is_admin = $is_admin;
@@ -29,7 +29,7 @@ class comments
 		$this->current_page = $current_page;
 	}
 
-	function get_comments()
+	public function get_comments()
 	{
 		// @TODO Potentially combine
 		if (!$this->is_admin)
@@ -48,8 +48,8 @@ class comments
 				DOC_COMMENTS_TABLE => 'c',
 				USERS_TABLE => 'u',
 			),
-			'WHERE' => 'c.location_id = "' . $this->location_id .
-				'" AND u.user_id = c.user_id' .
+			'WHERE' => 'c.location_id = ' . $this->location_id .
+				' AND u.user_id = c.user_id' .
 				$private_sql,
 			'ORDER_BY' => 'c.comment_timestamp ASC',
 		);
@@ -60,7 +60,7 @@ class comments
 		return $result;
 	}
 
-	function add_comment($comment_text, $bbcode_bitfield, $bbcode_uid, $bbcode_flags, $enable_bbcode, $enable_magic_url, $enable_smilies)
+	public function add_comment($comment_text, $bbcode_bitfield, $bbcode_uid, $bbcode_flags, $enable_bbcode, $enable_magic_url, $enable_smilies)
 	{
 		// @TODO catch and report errors
 		if ($comment_author->data['user_id'] != ANONYMOUS)
@@ -87,7 +87,7 @@ class comments
 		}
 	}
 
-	function delete_comment($comment_id)
+	public function delete_comment($comment_id)
 	{
 		if ($this->is_admin && $comment_author->data['user_id'] != ANONYMOUS)
 		{
@@ -103,7 +103,7 @@ class comments
 		}
 	}
 
-	function hide_comment($comment_id)
+	public function hide_comment($comment_id)
 	{
 		if ($this->is_admin && $comment_author->data['user_id'] != ANONYMOUS)
 		{
@@ -112,14 +112,14 @@ class comments
 			);
 
 			$sql = 'UPDATE ' . DOC_COMMENTS_TABLE . '
-				SET ' . $db->sql_build_array('UPDATE', $sql_array) . "
-				WHERE comment_id = '" . $comment_id . "'";
+				SET ' . $db->sql_build_array('UPDATE', $sql_array) . '
+				WHERE comment_id = ' . $comment_id;
 
 			$db->sql_query($sql);
 		}
 	}
 
-	function unhide_comment($comment_id)
+	public function unhide_comment($comment_id)
 	{
 		if ($this->is_admin && $comment_author->data['user_id'] != ANONYMOUS)
 		{
@@ -128,13 +128,13 @@ class comments
 			);
 
 			$sql = 'UPDATE ' . DOC_COMMENTS_TABLE . '
-				SET ' . $db->sql_build_array('UPDATE', $sql_array) . "
-				WHERE comment_id = '" . $comment_id . "'";
+				SET ' . $db->sql_build_array('UPDATE', $sql_array) . '
+				WHERE comment_id = ' . $comment_id;
 			$db->sql_query($sql);
 		}
 	}
 
-	function edit_comment($comment_id, $comment_text, $bbcode_bitfield, $bbcode_uid, $bbcode_flags, $enable_bbcode, $enable_magic_url, $enable_smilies)
+	public function edit_comment($comment_id, $comment_text, $bbcode_bitfield, $bbcode_uid, $bbcode_flags, $enable_bbcode, $enable_magic_url, $enable_smilies)
 	{
 		if ($comment_author->data['user_id'] != ANONYMOUS)
 		{
@@ -150,13 +150,13 @@ class comments
 			);
 
 			$sql = 'UPDATE ' . DOC_COMMENTS_TABLE . '
-				SET ' . $db->sql_build_array('UPDATE', $sql_array) . "
-				WHERE comment_id = '" . $comment_id . "'";
+				SET ' . $db->sql_build_array('UPDATE', $sql_array) . '
+				WHERE comment_id = ' . $comment_id;
 			$db->sql_query($sql);
 		}
 	}
 
-	function get_article_id($comment_id)
+	public function get_article_id($comment_id)
 	{
 		$sql = 'SELECT article_id 
 				FROM ' . DOC_COMMENTS_TABLE . ' 
@@ -175,7 +175,7 @@ class comments
 		return null;
 	}
 
-	function count_comments()
+	public function count_comments()
 	{
 		$sql = 'SELECT COUNT(*) AS num_comments 
 				FROM ' . DOC_COMMENTS_TABLE . ' 
@@ -195,7 +195,7 @@ class comments
 	}
 
 	// @TODO Finish paging, might want to just use a paginator class instead
-	function has_next()
+	public function has_next()
 	{
 		if ($this->count_pages() > $this->current_page && $this->current_page > 0)
 		{
@@ -207,7 +207,7 @@ class comments
 		}
 	}
 
-	function has_prev()
+	public function has_prev()
 	{
 		if ($this->current_page > 0)
 		{
@@ -219,7 +219,7 @@ class comments
 		}
 	}
 
-	function count_pages()
+	public function count_pages()
 	{
 		return ($this->count_comments() + $this->page_limit - 1) / $this->page_limit;
 	}
